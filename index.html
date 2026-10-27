@@ -1125,9 +1125,9 @@ CONTENIDOS.prop=()=>{ const p=PROPS_ICONO[propId]||["—",""]; const ic=ICONOS.f
   <p style="margin-top:12px"><button class="boton-xp" onclick="abrirVentana('${propWin}')" style="font-weight:700">${t("Abrir","Open")}</button></p>` };
 function propsInit(){
   const w=VENTANAS.props?VENTANAS.props.el:null; if(!w)return;
-  w.querySelectorAll(".props-tab").forEach(b=>b.onclick=()=>{ propsTab=b.dataset.tab; w.querySelector(".cuerpo").innerHTML=CONTENIDOS.props(); propsInit(); SFX.clic() });
+  w.querySelectorAll(".props-tab").forEach(b=>b.onclick=()=>{ propsTab=b.dataset.tab; w.querySelector(".cuerpo").innerHTML=CONTENIDOS.props(); propsInit(); SFX.click() });
   w.querySelectorAll(".fondo-card").forEach(b=>b.onclick=()=>{ aplicarFondo(b.dataset.fondo,true); w.querySelector(".cuerpo").innerHTML=CONTENIDOS.props(); propsInit(); SFX.carta() });
-  w.querySelectorAll('input[name="cur"]').forEach(r=>r.onchange=()=>{ CURSOR=r.value; aplicarCursor(); SFX.clic() });
+  w.querySelectorAll('input[name="cur"]').forEach(r=>r.onchange=()=>{ CURSOR=r.value; aplicarCursor(); SFX.click() });
   const st=$("#salva-tipo"), sm=$("#salva-min"), sv=$("#salva-ver");
   if(st)st.onchange=()=>{ SALVA_TIPO=st.value; localStorage.setItem("tidelabs_salva",SALVA_TIPO); salvaRearmar() };
   if(sm)sm.onchange=()=>{ SALVA_MIN=+sm.value; localStorage.setItem("tidelabs_salva_min",String(SALVA_MIN)); salvaRearmar() };
