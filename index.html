@@ -268,6 +268,14 @@ body.win95 .icono .pix.svg svg{width:40px;height:40px;filter:saturate(.72) contr
 body.win95 #baifo{cursor:url("img/cursores/win95/hand.png") 10 10,pointer}
 #baifo-img{width:100%;height:100%;object-fit:contain;object-position:bottom center;display:block;pointer-events:none}
 #baifo.mira-izq #baifo-img{transform:scaleX(-1)}
+.paseante{position:fixed;left:0;top:0;z-index:590;will-change:transform;cursor:pointer}
+.paseante img{width:100%;height:100%;object-fit:contain;object-position:bottom center;display:block;pointer-events:none}
+.paseante.mira-izq img{transform:scaleX(-1)}
+.p2-boc{position:absolute;bottom:96%;left:50%;transform:translateX(-50%) scale(.8);width:max-content;max-width:220px;background:#FFF;color:#222;font-family:Tahoma,sans-serif;font-size:12.5px;line-height:1.35;padding:7px 11px;border:2px solid #333;border-radius:12px;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.p2-boc.visible{opacity:1;transform:translateX(-50%) scale(1)}
+.p2-zzz{position:absolute;top:-6px;right:0;font-size:17px;opacity:0;transition:opacity .3s;pointer-events:none}
+.p2-zzz.visible{opacity:1}
+.p2-star{position:fixed;z-index:595;pointer-events:none;font-size:16px}
 #baifo-bocadillo{position:absolute;bottom:96%;left:50%;transform:translateX(-50%) scale(.8);width:max-content;max-width:230px;background:#FFF;color:#222;font-family:Tahoma,sans-serif;font-size:12.5px;line-height:1.35;padding:7px 11px;border:2px solid #333;border-radius:12px;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.25)}
 #baifo-bocadillo.visible{opacity:1;transform:translateX(-50%) scale(1)}
 #baifo-bocadillo::after{content:"";position:absolute;top:100%;left:50%;margin-left:-6px;border:6px solid transparent;border-top:8px solid #333}
@@ -460,7 +468,7 @@ function aplicarIdioma(){
   document.documentElement.lang=LANG;
   $$("[data-i18n]").forEach(el=>{const k=el.dataset.i18n; if(I[LANG][k]) el.innerHTML=I[LANG][k];});
   $("#tray-idioma").textContent=LANG.toUpperCase();
-  pintarIconos(); pintarMenus(); reloj(); fondoInit(); aplicarCursor(); salvaInit(); baifoInit();
+  pintarIconos(); pintarMenus(); reloj(); fondoInit(); aplicarCursor(); salvaInit(); baifoInit(); p2Init();
 }
 function t(es,en){return LANG==="es"?es:en}
 
@@ -538,7 +546,7 @@ const ICONOS=[
  {id:"msn",img:"img/msn.jpg",es:"Contacto MSN",en:"MSN Contact",win:"msn"},
  {id:"juegos",img:null,svg:"juegos",modo:"juegos",es:"Juegos",en:"Games",win:"juegos"},{id:"paint",img:"img/epoca/paint.png",es:"Paint",en:"Paint",win:"paint"},
  {id:"radio",img:"img/epoca/wmp.png",es:"Radio de la casa",en:"House Radio",win:"radio"},{id:"notas",img:null,svg:"notas",es:"Notas",en:"Notes",win:"notas"},{id:"desk",img:"img/probeta.jpg",es:"TIDElabs Desk",en:"TIDElabs Desk",win:"desk",badge:".exe"},
- {id:"ie",img:"img/epoca/ie.png",es:"Internet Explorer",en:"Internet Explorer",win:"ie"},{id:"baifo",img:"img/baifo/quieto.png",es:"BAIFO",en:"BAIFO",win:"baifo"},{id:"papelera",img:null,modo:"papelera",es:"Papelera",en:"Recycle Bin",win:"papelera"}
+ {id:"ie",img:"img/epoca/ie.png",es:"Internet Explorer",en:"Internet Explorer",win:"ie"},{id:"baifo",img:"img/baifo/quieto.png",es:"BAIFO",en:"BAIFO",win:"baifo"},{id:"hermanita",img:"img/hermanita/quieto.png",es:"La hermanita",en:"The little sister",win:"hermanita"},{id:"mini",img:"img/mini/quieto.png",es:"Mini-BAIFO",en:"Mini-BAIFO",win:"mini"},{id:"papelera",img:null,modo:"papelera",es:"Papelera",en:"Recycle Bin",win:"papelera"}
 ];
 let posIconos=JSON.parse(localStorage.getItem("tidelabs_iconos2")||"null");
 function pintarIconos(){
@@ -548,7 +556,7 @@ function pintarIconos(){
     const def=posIconos&&posIconos[ic.id]?posIconos[ic.id]:{x:14+Math.floor(i/5)*116,y:12+(i%5)*118};
     d.style.left=def.x+"px"; d.style.top=def.y+"px";
     d.innerHTML=(ic.img?`<img src="${ic.img}" alt="">`:(ic.modo==="mypc"||ic.modo==="papelera")?`<img src="${srcModo(ic.modo)}" alt="">`:ic.modo==="juegos"?(TEMA==="95"?`<img src="img/epoca/win95/juegos.png" alt="">`:pixSVG("juegos")):ic.svg?pixSVG(ic.svg):`<span class="pix">${ic.pix}</span>`)+(ic.badge?`<span class="descarga">${ic.badge}</span>`:"")+`<span>${LANG==="es"?ic.es:ic.en}</span>`;
-    d.addEventListener("click",e=>{ $$(".icono").forEach(x=>x.classList.remove("sel")); d.classList.add("sel"); if(ic.id==="baifo"&&!bf.presente)abrirIcono(ic); e.stopPropagation() });
+    d.addEventListener("click",e=>{ $$(".icono").forEach(x=>x.classList.remove("sel")); d.classList.add("sel"); if((ic.id==="baifo"&&!bf.presente)||(ic.id==="hermanita"&&W.hermanita&&!W.hermanita.presente)||(ic.id==="mini"&&W.mini&&!W.mini.presente))abrirIcono(ic); e.stopPropagation() });
     d.addEventListener("dblclick",()=>abrirIcono(ic));
     let sx,sy,ox,oy,mov=false;
     d.addEventListener("pointerdown",e=>{ sx=e.clientX;sy=e.clientY;ox=d.offsetLeft;oy=d.offsetTop;mov=false;
@@ -623,7 +631,7 @@ function enfocar(id){
   Object.entries(VENTANAS).forEach(([k,v])=>v.el.classList.toggle("sin-foco",k!==id));
   $$("#tareas .tarea").forEach(b=>b.classList.toggle("activa",b.dataset.id===id));
 }
-function abrirIcono(ic){ if(ic.id==="baifo"){ bfInvocar(); return } abrirVentana(ic.win) }
+function abrirIcono(ic){ if(ic.id==="baifo"){ bfInvocar(); return } if(ic.id==="hermanita"){ p2Invocar(W.hermanita); return } if(ic.id==="mini"){ p2Invocar(W.mini); return } abrirVentana(ic.win) }
 function abrirVentana(id){
   if(VENTANAS[id]){ const v=VENTANAS[id]; v.el.style.display="flex"; v.el.style.zIndex=++Z; enfocar(id); return }
   const def=DEFS[id];
@@ -1332,6 +1340,149 @@ ACCIONES["abrir-baifo"]=()=>bfInvocar();
 ACCIONES["bf-frase"]=()=>{ bfDecir(bfFrase()); if(SFX.baifo)SFX.baifo() };
 ACCIONES["bf-explorer"]=()=>abrirVentana("ie");
 if(window.SFX)SFX.baifo=()=>{ nota(545,.13,"sawtooth",.09,0,350); nota(505,.17,"sawtooth",.09,.11,295); nota(770,.06,"square",.04,.02) };
+
+/* ---------- LA FAMILIA DE BAIFO: la hermanita y Mini-BAIFO ---------- */
+const HER_F=[["¡Mira, mira! ¿Eso qué es? ¡Vamos a verlo!","Look, look! What's that? Let's go see!"],["Hoy me suena el cascabel: ¡día de descubrimientos!","My bell is jingling today: discovery day!"],["¿Has contado las estrellas del protector? Yo sí. Todas.","Counted the screensaver stars yet? I have. All of them."],["Corro más que el mini. Pero no se lo digas.","I'm faster than Mini. Don't tell him."],["Una ventana nueva… ¡hay que subir a mirarla!","A new window… must climb up and peek!"],["Iluminar es lo mío, pero con saltitos.","Lighting up is my thing — with hops."],["¡Eh! ¡Casi me pisas el cascabel!","Hey! Mind my bell!"],["Desde aquí se ve el Teide. Bueno, su foto.","You can see Teide from here. Well, its photo."]];
+const MINI_F=[["¡ba!","ba!"],["yo no me caigo nunca. casi nunca.","I never fall. almost never."],["¿eso se come?","can you eat that?"],["¡esperadmeeee!","waaait for meee!"],["el pañuelo es mi capa de héroe.","the bandana is my hero cape."],["tengo sueño… no, ¡a jugar!","I'm sleepy… no — playtime!"],["¡yo también ilumino! ¡mira! …¿se ha encendido algo?","I light up too! look! …did anything turn on?"],["si me pierdo, grito ¡baaa! y vienen.","if I get lost I shout baaa! and they come."]];
+const P2_ENC={
+ "her-bf":[["her",["¡BAIFO! ¡He descubierto OTRA ventana! ¡Ven a verla!","BAIFO! I found ANOTHER window! Come see!"]],["bf",["¡Baaa! Esa la ilumino yo, que para eso soy el mayor.","Baaa! I'll light that one — eldest privileges."]]],
+ "mini-bf":[["mini",["¡ba-ba-BAIFOOO!","ba-ba-BAIFOOO!"]],["bf",["Despacio, campeón, que te conozco.","Easy, champ. I know you."]]],
+ "her-mini":[["her",["Mini… ¡carrera hasta la papelera! ¡Ya!","Mini… race you to the bin! Go!"]],["mini",["¡vale! …¿por qué estoy boca abajo?","okay! …why am I upside down?"]]]};
+const P2_CFG={
+ hermanita:{carpeta:"hermanita",caja:96,vel:54,corre:136,duermeP:.07,sigue:false,tropieza:0,frases:HER_F},
+ mini:{carpeta:"mini",caja:66,vel:36,corre:98,duermeP:.23,sigue:true,tropieza:.0038,frases:MINI_F}};
+const W={}; const p2Cool={};
+function p2Nuevo(id){ return {id:id,cfg:P2_CFG[id],x:innerWidth*.5,pies:innerHeight-34,dir:1,vy:0,estado:"quieto",tEstado:2,tFrame:0,frame:0,corre:0,fotograma:"",presente:false,rot:0,escala:1,ultimo:0,solo:0,rodando:0,tropiezaLuego:false,saltaLuego:false,bocTimer:null,el:null,img:null,boc:null,zzz:null} }
+function p2Frame(w,n){ if(w.fotograma===n)return; w.fotograma=n; if(w.img)w.img.src="img/"+w.cfg.carpeta+"/"+n+".png" }
+function p2Decir(w,txt,ms){ if(!w.boc)return; w.boc.textContent=txt; w.boc.classList.add("visible"); clearTimeout(w.bocTimer); w.bocTimer=setTimeout(()=>w.boc.classList.remove("visible"),ms||3200) }
+function p2Frase(w){ const f=w.cfg.frases[Math.floor(Math.random()*w.cfg.frases.length)]; return LANG==="es"?f[0]:f[1] }
+function p2Bleat(w){ if(!window.SFX)return; if(w.id==="hermanita"&&SFX.her)SFX.her(); else if(w.id==="mini"&&SFX.mini)SFX.mini(); else if(SFX.baifo)SFX.baifo() }
+function p2Estrellas(x,y,emojis){
+  emojis.forEach((em,i)=>{ const s=document.createElement("span"); s.className="p2-star"; s.textContent=em; s.style.left=x+"px"; s.style.top=y+"px"; document.body.appendChild(s);
+    const ang=-Math.PI/2+(i-(emojis.length-1)/2)*.55, dist=34+Math.random()*30;
+    s.animate([{transform:"translate(-50%,-50%) scale(.5)",opacity:1},{transform:"translate("+(Math.cos(ang)*dist-8)+"px, "+(Math.sin(ang)*dist-26)+"px) scale(1.2)",opacity:0}],{duration:750+Math.random()*250,easing:"cubic-bezier(.2,.8,.3,1)"}).onfinish=()=>s.remove() });
+}
+function p2AdultoCerca(w){
+  const cands=[];
+  if(bf.presente)cands.push({x:bf.x,pies:bf.pies});
+  ["hermanita","mini"].forEach(id=>{ if(id!==w.id&&W[id]&&W[id].presente)cands.push({x:W[id].x,pies:W[id].pies}) });
+  if(!cands.length)return null;
+  cands.sort((a,b)=>Math.abs(a.x-w.x)-Math.abs(b.x-w.x)); return cands[0];
+}
+function p2Invocar(w,v){
+  BAIFO_ON=true; localStorage.setItem("tidelabs_baifo","on");
+  if(w.presente){ p2Decir(w,p2Frase(w)); p2Bleat(w);
+    if(w.id==="mini"&&Math.random()<.4){ w.estado="tropiezo"; w.tEstado=.75 }
+    else if(bfApoyo.call(null)||true){ w.vy=-380; w.estado="cae" }
+    return }
+  w.presente=true;
+  const variante=v!==undefined?v:Math.floor(Math.random()*2);
+  if(variante===0){ const izq=Math.random()<.5; w.x=izq?-110:innerWidth+110; w.dir=izq?1:-1; w.pies=innerHeight-34; w.corre=6; w.estado="paseo"; w.tEstado=8;
+    if(w.id==="mini"){ w.rodando=1.15; w.estado="cae" }
+    p2Bleat(w); p2Decir(w,w.id==="mini"?(LANG==="es"?"¡allá vooooy!":"here I coooome!"):(LANG==="es"?"¡Ya llego! ¡Saltando, claro!":"Coming! Hopping, of course!")) }
+  else { w.x=innerWidth*(0.25+Math.random()*0.5); w.pies=innerHeight-34; w.escala=0; w.estado="quieto"; w.tEstado=3;
+    p2Estrellas(w.x,w.pies-52,["⭐","✨","⭐"]); if(SFX.ganar)SFX.ganar();
+    p2Decir(w,w.id==="mini"?(LANG==="es"?"¡ba! he aparecido. ¿a que no me esperabas?":"ba! I appeared. didn't expect me, huh?"):(LANG==="es"?"¡Puf! ¡La hermanita, a descubrirlo todo!":"Poof! The little sister, here to discover everything!"),3600) }
+}
+function p2Decide(w){
+  if(w.estado==="encuentro"){ if(w.tropiezaLuego){ w.tropiezaLuego=false; w.estado="tropiezo"; w.tEstado=.75; return } if(w.saltaLuego){ w.saltaLuego=false; w.vy=-400; w.estado="cae"; return } }
+  if(w.estado==="duerme"){ w.estado="paseo"; w.tEstado=4+Math.random()*4; return }
+  const adulto=w.cfg.sigue?p2AdultoCerca(w):null;
+  if(adulto&&Math.abs(adulto.x-w.x)>240){ w.estado="paseo"; w.dir=adulto.x>w.x?1:-1; w.tEstado=3.5; if(Math.random()<.35)p2Decir(w,LANG==="es"?"¡esperadmeeee!":"waaait for meee!"); return }
+  const r=Math.random(), d=w.cfg.duermeP;
+  if(r<.38){ w.estado="paseo"; if(Math.random()<.3)w.dir*=-1; w.tEstado=4+Math.random()*5 }
+  else if(r<.58){ w.estado="quieto"; w.tEstado=2+Math.random()*2.4 }
+  else if(r<.74){ w.estado="pasta"; w.tEstado=3+Math.random()*2.5 }
+  else if(r<.74+d){ w.estado="duerme"; w.tEstado=6+Math.random()*5 }
+  else { w.vy=w.id==="hermanita"?-330:-430; w.estado="cae"; if(Math.random()<.3)p2Decir(w,w.id==="mini"?(LANG==="es"?"¡yuju!":"wheee!"):(LANG==="es"?"¡Salto de cascabel!":"Bell hop!")) }
+}
+function p2Pinta(w){
+  w.el.style.transform="translate("+(w.x-w.cfg.caja/2)+"px, "+(w.pies-w.cfg.caja)+"px) rotate("+w.rot+"deg) scale("+w.escala+")";
+  w.el.classList.toggle("mira-izq",w.dir<0);
+  w.zzz.classList.toggle("visible",w.estado==="duerme");
+}
+function p2Cosita(w,otro,clave){
+  const ahora=performance.now(); if(p2Cool[clave]&&ahora-p2Cool[clave]<30000)return; p2Cool[clave]=ahora;
+  const guion=P2_ENC[clave]; if(!guion)return;
+  w.estado="encuentro"; w.tEstado=2.7; w.dir=(otro.x>w.x)?1:-1;
+  let otroW=null;
+  if(otro.esBf){ bf.estado="quieto"; bf.tEstado=2.7; bf.dir=(w.x>bf.x)?1:-1 }
+  else { otroW=otro.w; otroW.estado="encuentro"; otroW.tEstado=2.7; otroW.dir=(w.x>otroW.x)?1:-1 }
+  p2Estrellas((w.x+otro.x)/2, w.pies-64, ["💗","✨","💗","⭐"]);
+  const decirA=(quien,txt)=>{ if(quien==="bf")bfDecir(txt); else if(W[quien])p2Decir(W[quien],txt) };
+  setTimeout(()=>decirA(guion[0][0],LANG==="es"?guion[0][1][0]:guion[0][1][1]),160);
+  setTimeout(()=>decirA(guion[1][0],LANG==="es"?guion[1][0+1][0]:guion[1][1][1]),1400);
+  if(clave.indexOf("mini")>=0&&W.mini&&W.mini.presente)W.mini.tropiezaLuego=true;
+  if(clave.indexOf("her")>=0&&W.hermanita&&W.hermanita.presente)W.hermanita.saltaLuego=true;
+}
+function p2Tick(ts){
+  requestAnimationFrame(p2Tick);
+  const desk=$("#desktop"); if(!desk)return;
+  const deskVisible=getComputedStyle(desk).display!=="none";
+  ["hermanita","mini"].forEach(id=>{
+    const w=W[id]; if(!w||!w.el)return;
+    const dt=Math.min(.05,w.ultimo?(ts-w.ultimo)/1000:0); w.ultimo=ts;
+    const visible=BAIFO_ON&&w.presente&&deskVisible;
+    w.el.hidden=!visible; if(!visible)return;
+    w.tEstado-=dt;
+    if(w.estado!=="cae"&&w.x<-160||w.x>innerWidth+160){ if(w.estado!=="cae"){ w.presente=false; p2Invocar(w,1); return } }
+    if(w.escala<1)w.escala=Math.min(1,w.escala+dt*2.8);
+    if(w.rodando>0){ w.rodando-=dt; w.x+=w.dir*118*dt; w.rot+=330*dt; p2Frame(w,"cae");
+      if(w.rodando<=0){ w.rot=0; w.estado="quieto"; w.tEstado=1.4; p2Estrellas(w.x,w.pies-40,["⭐","✨"]); }
+      p2Pinta(w); return }
+    if(w.estado==="tropiezo"){ w.rot=Math.min(360,w.rot+480*dt); p2Frame(w,"cae"); if(w.tEstado<=0){ w.rot=0; w.estado="quieto"; w.tEstado=1.2 } p2Pinta(w); return }
+    const apoyos=bfSoportes();
+    const apoyo=apoyos.filter(s=>w.x>s.x1&&w.x<s.x2&&Math.abs(s.y-w.pies)<3)[0];
+    if(w.estado!=="cae"&&!apoyo){ w.estado="cae"; w.vy=0 }
+    if(w.estado==="cae"){
+      const antes=w.pies; w.vy+=1500*dt; w.pies+=w.vy*dt;
+      const cruza=apoyos.filter(s=>w.x>s.x1&&w.x<s.x2&&s.y>=antes-1&&s.y<=w.pies);
+      if(cruza.length&&w.vy>0){ const s=cruza.reduce((a,b)=>a.y<b.y?a:b); w.pies=s.y; w.vy=0; w.estado="quieto"; w.tEstado=1.1+Math.random()*1.4 }
+      if(w.pies>innerHeight-34){ w.pies=innerHeight-34; w.vy=0; w.estado="quieto"; w.tEstado=1.4 }
+      p2Frame(w,"cae");
+    } else if(w.estado==="paseo"){
+      w.corre=Math.max(0,w.corre-dt);
+      w.x+=w.dir*(w.corre>0?w.cfg.corre:w.cfg.vel)*dt;
+      w.tFrame-=dt;
+      if(w.tFrame<=0){ w.tFrame=w.corre>0?.11:.17; w.frame=(w.frame+1)%4; p2Frame(w,"paseo-"+w.frame) }
+      if(w.corre<=0){ if(w.x<40){ w.x=40; w.dir=1 } if(w.x>innerWidth-40){ w.x=innerWidth-40; w.dir=-1 } }
+      if(w.id==="hermanita"&&apoyo&&Math.random()<dt*.45){ w.vy=-300; w.estado="cae" }
+      if(w.id==="mini"&&apoyo&&Math.random()<w.cfg.tropieza){ w.estado="tropiezo"; w.tEstado=.75; if(Math.random()<.4)p2Decir(w,LANG==="es"?"¡no ha pasado nada!":"nothing happened!") }
+      if(w.tEstado<=0)p2Decide(w);
+    } else {
+      p2Frame(w,w.estado==="pasta"?"pasta":w.estado==="duerme"?"duerme":"quieto");
+      if(w.id==="mini"){ const ad=p2AdultoCerca(w); if(!ad){ w.solo+=dt; if(w.solo>20&&w.estado!=="duerme"){ w.solo=8; p2Decir(w,LANG==="es"?"¡baaa! ¿dónde estáis?":"baaa! where are you?"); p2Bleat(w) } } else w.solo=0 }
+      if(w.tEstado<=0)p2Decide(w);
+    }
+    p2Pinta(w);
+  });
+  // encuentros: las cositas
+  const her=W.hermanita, mini=W.mini;
+  if(her&&her.presente&&bf.presente&&her.estado!=="cae"&&bf.estado!=="cae"&&Math.abs(her.pies-bf.pies)<26&&Math.abs(her.x-bf.x)<76)p2Cosita(her,{esBf:true,x:bf.x},"her-bf");
+  if(mini&&mini.presente&&bf.presente&&mini.estado!=="cae"&&bf.estado!=="cae"&&Math.abs(mini.pies-bf.pies)<26&&Math.abs(mini.x-bf.x)<76)p2Cosita(mini,{esBf:true,x:bf.x},"mini-bf");
+  if(her&&mini&&her.presente&&mini.presente&&her.estado!=="cae"&&mini.estado!=="cae"&&Math.abs(her.pies-mini.pies)<26&&Math.abs(her.x-mini.x)<72)p2Cosita(her,{w:mini,x:mini.x},"her-mini");
+}
+function p2Init(){
+  if(window.SFX&&!SFX.her){ SFX.her=()=>{ nota(690,.11,"sawtooth",.075,0,470); nota(640,.15,"sawtooth",.075,.1,430); nota(920,.05,"square",.03,.02) };
+    SFX.mini=()=>{ nota(880,.07,"sawtooth",.065,0,640); nota(1050,.06,"square",.028,.05) } }
+  ["hermanita","mini"].forEach(id=>{
+    const w=p2Nuevo(id); W[id]=w;
+    const el=document.createElement("div"); el.className="paseante"; el.id="p2-"+id; el.hidden=true;
+    el.style.width=w.cfg.caja+"px"; el.style.height=w.cfg.caja+"px";
+    el.innerHTML="<div class='p2-boc'></div><img alt=''><div class='p2-zzz'>💤</div>";
+    document.body.appendChild(el);
+    w.el=el; w.img=el.querySelector("img"); w.boc=el.querySelector(".p2-boc"); w.zzz=el.querySelector(".p2-zzz");
+    w.img.src="img/"+w.cfg.carpeta+"/quieto.png";
+    ["paseo-0","paseo-1","paseo-2","paseo-3","quieto","pasta","duerme","cae"].forEach(n=>{ const i=new Image(); i.src="img/"+w.cfg.carpeta+"/"+n+".png" });
+    el.addEventListener("click",()=>{ p2Decir(w,p2Frase(w)); p2Bleat(w);
+      if(w.id==="mini"&&Math.random()<.45){ w.estado="tropiezo"; w.tEstado=.75 }
+      else { w.vy=-360; w.estado="cae" } });
+  });
+  requestAnimationFrame(p2Tick);
+}
+ACCIONES["abrir-hermanita"]=()=>p2Invocar(W.hermanita);
+ACCIONES["abrir-mini"]=()=>p2Invocar(W.mini);
+
 /* ---------- RADIO de la casa ---------- */
 function radioInit(){
   const au=$("#radio-audio"), btn=$("#radio-play"), prog=$("#radio-prog"), barra=prog?prog.querySelector("i"):null, tiempo=$("#radio-tiempo");
