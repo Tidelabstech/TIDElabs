@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TIDElabs — Deck de inversores · Si lo has soñado, podemos crearlo</title>
+<meta name="description" content="Deck interactivo de TIDElabs para inversores: una casa creativa de Canarias con HUELLA GO, Aliseo.studio en vivo y ALLINCRU.">
+<style>
+:root{--medianoche:#0A1E3C;--fondo:#010612;--oro:#D9A441;--oro2:#F2C86B;--crema:#F4EDDC;--tinta:#E9EEF7;--suave:#9FB2CC;--verde:#2ECC71;--linea:rgba(217,164,65,.35)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--fondo);color:var(--tinta);font-family:Georgia,'Times New Roman',serif;overflow:hidden}
+#progreso{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--oro),var(--oro2));z-index:50;transition:width .45s ease}
+.slide{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:56px 7vw 90px;opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .45s ease;background:radial-gradient(1100px 550px at 50% 18%,#12305C 0%,var(--medianoche) 46%,var(--fondo) 100%)}
+.slide.activa{display:flex;opacity:1;transform:none}
+.kicker{font-family:Tahoma,Verdana,sans-serif;font-size:.72rem;letter-spacing:.34em;color:var(--oro);text-transform:uppercase;margin-bottom:18px}
+h1{font-size:clamp(2.6rem,7.2vw,5.2rem);font-weight:400;color:#FFF;line-height:1.04}
+h1 b{color:var(--oro);font-weight:700}
+h2{font-size:clamp(1.7rem,4.4vw,3rem);font-weight:400;color:#FFF;line-height:1.12;max-width:20ch}
+h2 b{color:var(--oro)}
+.lema{font-size:clamp(1.25rem,3vw,1.9rem);font-style:italic;color:var(--crema);margin-top:20px}
+p.txt{font-family:Tahoma,Verdana,sans-serif;font-size:clamp(.95rem,1.6vw,1.08rem);line-height:1.65;color:var(--tinta);max-width:62ch;margin-top:18px}
+p.txt b{color:#FFF}
+.nota{font-family:Tahoma,Verdana,sans-serif;font-size:.8rem;color:var(--suave);margin-top:14px}
+.marca-img{width:118px;height:118px;border-radius:16px;box-shadow:0 0 60px rgba(217,164,65,.28);margin-bottom:26px}
+.proy-img{width:92px;height:92px;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.5);margin-bottom:20px}
+.tarjetas{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:28px;max-width:1000px}
+.tarjeta{font-family:Tahoma,Verdana,sans-serif;background:rgba(255,255,255,.045);border:1px solid var(--linea);border-radius:12px;padding:18px 20px;width:272px;text-align:left}
+.tarjeta img{width:46px;height:46px;border-radius:9px;margin-bottom:9px}
+.tarjeta h3{font-size:1rem;color:#FFF;margin-bottom:5px}
+.tarjeta p{font-size:.86rem;line-height:1.5;color:var(--suave)}
+.estado{display:inline-block;font-size:.64rem;font-weight:700;letter-spacing:.08em;border-radius:7px;padding:2px 8px;margin-bottom:8px;font-family:Tahoma,sans-serif}
+.e-vivo{background:#123f24;color:#7DE3A2;border:1px solid #2E7D4F}.e-dev{background:#453A08;color:#F2C86B;border:1px solid #8A6D1F}.e-taller{background:#2A2148;color:#B9A8DE;border:1px solid #5B4A94}
+.cifras{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:26px}
+.cifra{border:1px solid var(--linea);border-radius:12px;padding:16px 22px;background:rgba(255,255,255,.04);min-width:180px}
+.cifra .n{font-size:1.9rem;color:var(--oro);display:block}
+.cifra .d{font-family:Tahoma,sans-serif;font-size:.78rem;color:var(--suave);line-height:1.45;display:block;margin-top:4px}
+.lista{font-family:Tahoma,sans-serif;text-align:left;max-width:56ch;margin-top:20px;line-height:1.75;font-size:.98rem}
+.lista li{margin-bottom:7px}
+.lista b{color:var(--oro2)}
+#nav{position:fixed;bottom:22px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:18px;z-index:50;font-family:Tahoma,sans-serif}
+#nav button{background:rgba(255,255,255,.06);border:1px solid var(--linea);color:var(--crema);width:44px;height:44px;border-radius:50%;font-size:1.05rem;cursor:pointer}
+#nav button:hover{background:rgba(217,164,65,.22)}
+#puntos{display:flex;gap:7px}
+#puntos i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer}
+#puntos i.on{background:var(--oro)}
+#contador{position:fixed;bottom:30px;right:26px;font-family:Tahoma,sans-serif;font-size:.8rem;color:var(--suave);z-index:50}
+#marca-esquina{position:fixed;top:16px;left:20px;display:flex;gap:9px;align-items:center;font-family:Tahoma,sans-serif;font-size:.8rem;letter-spacing:.18em;color:var(--suave);z-index:50}
+#marca-esquina img{width:26px;height:26px;border-radius:6px}
+a{color:var(--oro2)}
+.cta{display:inline-block;margin-top:24px;font-family:Tahoma,sans-serif;background:linear-gradient(180deg,var(--oro2),var(--oro));color:#231A04;font-weight:700;padding:13px 28px;border-radius:999px;text-decoration:none;font-size:1rem;box-shadow:0 10px 28px rgba(217,164,65,.35)}
+@media print{body{overflow:visible}.slide{position:static;display:flex!important;opacity:1;transform:none;page-break-after:always;height:auto;min-height:90vh}#nav,#contador,#progreso{display:none}}
+</style>
+</head>
+<body>
+<div id="progreso" style="width:10%"></div>
+<div id="marca-esquina"><img src="../img/probeta.jpg" alt=""> TIDELABS</div>
+
+<section class="slide activa">
+  <img class="marca-img" src="../img/probeta.jpg" alt="La probeta de mareas, marca de TIDElabs">
+  <p class="kicker">Deck de inversores · Canarias</p>
+  <h1>TIDE<b>labs</b></h1>
+  <p class="lema">«Si lo has soñado, podemos crearlo.»</p>
+  <p class="txt">Una casa creativa que construye productos con comunidad propia — y un estudio que factura para clientes mientras tanto.</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">La casa</p>
+  <h2>Una casa, <b>no una app</b></h2>
+  <p class="txt">TIDElabs no es un producto: es el taller donde nacen. Tres marcas con público propio comparten equipo, tecnología y criterio — y el estudio de clientes pone la caja desde el primer día.</p>
+  <div class="tarjetas">
+    <div class="tarjeta"><img src="../img/huella.png" alt=""><h3>HUELLA GO</h3><span class="estado e-dev">EN DESARROLLO</span><p>El juego que convierte caminar en jugar: territorio real, tribus y una cabra copiloto.</p></div>
+    <div class="tarjeta"><img src="../img/aliseo.jpg" alt=""><h3>Aliseo.studio</h3><span class="estado e-vivo">EN VIVO</span><p>Canciones personalizadas con productores reales. Vendiendo desde 25 €.</p></div>
+    <div class="tarjeta"><img src="../img/allincru.png" alt=""><h3>ALLINCRU · LEYENDAS</h3><span class="estado e-taller">EN EL TALLER</span><p>Laboratorio público de trading algorítmico: cada trade a la vista, ni un número inventado.</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">Producto 01</p>
+  <img class="proy-img" src="../img/huella.png" alt="Icono de HUELLA GO">
+  <h2>HUELLA GO — <b>el territorio se juega caminando</b></h2>
+  <p class="txt">Canarias convertida en tablero: rutas reales por GPS, conquistas, tribus y BAIFO, la cabra que comenta cada jugada. Ya probado en la calle, con rutas reales registradas desde teléfonos de usuarios.</p>
+  <div class="cifras">
+    <div class="cifra"><span class="n">10.000 × 499 €</span><span class="d">OBJETIVO declarado de la casa: negocios «lifetime» a 499 € ≈ 5 M€ de recorrido</span></div>
+    <div class="cifra"><span class="n">44 países</span><span class="d">con negocios ya mapeados en la cosecha inicial del embudo comercial</span></div>
+  </div>
+  <p class="nota">Cifras de objetivo y de embudo interno, no resultados: HUELLA GO está en desarrollo.</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">Producto 02 · En vivo</p>
+  <img class="proy-img" src="../img/aliseo.jpg" alt="Marca de Aliseo.studio">
+  <h2>Aliseo.studio — <b>tu historia, hecha canción</b></h2>
+  <p class="txt">Canciones personalizadas para bodas y grandes días, supervisadas por productores reales — no un generador automático. Web en vivo y recibiendo encargos, con garantía escrita: si la letra no emociona, se reescribe sin coste.</p>
+  <div class="cifras">
+    <div class="cifra"><span class="n">25 – 89 €</span><span class="d">tres niveles de encargo, desde la Esencial a la Premium</span></div>
+    <div class="cifra"><span class="n">8 / mes</span><span class="d">capacidad real de producción: escasez honesta, agenda por orden de llegada</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">Producto 03</p>
+  <img class="proy-img" src="../img/allincru.png" alt="Icono de ALLINCRU: la vela">
+  <h2>ALLINCRU — <b>el laboratorio que no inventa</b></h2>
+  <p class="txt">Estrategias legendarias de trading operando el oro (XAUUSD) en MetaTrader 5, en público: batallas, reputación y auditoría completa. Su ventaja no es una promesa — es una regla: <b>lo que no es real, no se publica</b>. En un sector podrido de humo, la transparencia es el producto.</p>
+  <p class="nota">En el taller: la flota se valida en el Strategy Tester antes de mostrar un solo resultado.</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">El motor</p>
+  <h2>El estudio paga las facturas; <b>los productos construyen el valor</b></h2>
+  <ul class="lista">
+    <li><b>Clientes primero:</b> la prioridad inmediata de la casa es la cartera de clientes — webs y productos a medida con el mismo sistema visual que ves en este deck.</li>
+    <li><b>Un solo equipo:</b> cada encargo de cliente afina la maquinaria que luego usan HUELLA, Aliseo y ALLINCRU.</li>
+    <li><b>Distribución propia:</b> comunidades vivas (LA CRU, el enjambre) antes que publicidad pagada.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <p class="kicker">La base</p>
+  <h2>Canarias, <b>con ventaja estructural</b></h2>
+  <p class="txt">Casa canaria con vocación global desde el diseño. La ZEC permite tributar al <b>4 % en el Impuesto de Sociedades</b> a quien cumple sus condiciones — 5 empleos en las islas capitalinas y 100.000 € de inversión en activos en Canarias — y la RIC permite reinvertir hasta el 90 % de la base. No es automática: es una ventaja preparada, con su ventana de autorización abierta hasta el 31-12-2026.</p>
+  <p class="nota">Verificado en la investigación registral y fiscal de la casa (octubre de 2026). La entidad se constituye con la inyección de capital, no antes: esa es la estructura acordada.</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">El momento</p>
+  <h2>Por qué <b>ahora</b></h2>
+  <ul class="lista">
+    <li><b>Aliseo ya vende:</b> producto en vivo, con precios, capacidad y garantía públicos.</li>
+    <li><b>HUELLA ya camina:</b> probado en calle por usuarios reales; la casa entera se presenta en un OS interactivo que ya es, en sí mismo, la demo.</li>
+    <li><b>Conversación abierta:</b> tras el Tenerife Accelera Fund, un fondo canario con ticket pre-seed de 50.000 € conoce la casa y su encaje está en estudio.</li>
+    <li><b>La ventana fiscal:</b> la autorización ZEC se pide antes de constituir — el calendario premia moverse en 2026.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <p class="kicker">La propuesta</p>
+  <h2>Capital que <b>enciende la casa</b></h2>
+  <p class="txt">La inyección constituye la S.L. (capital social de 3.000 €) y financia, por este orden: protección de marca y constitución (≈650–1.100 € de tramitación verificada), equipo y lanzamiento de HUELLA GO, y colchón de estudio para cerrar clientes sin prisa mala.</p>
+  <div class="cifras">
+    <div class="cifra"><span class="n">3.000 €</span><span class="d">capital social de constitución (recomendado)</span></div>
+    <div class="cifra"><span class="n">≈650–1.100 €</span><span class="d">constitución + marca acotada, ruta verificada</span></div>
+    <div class="cifra"><span class="n">A cerrar</span><span class="d">la cifra de la ronda se define en conversación, con el plan sobre la mesa</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <img class="marca-img" src="../img/probeta.jpg" alt="La probeta de mareas">
+  <h2>Si lo has soñado, <b>podemos crearlo</b></h2>
+  <p class="txt">La mejor manera de juzgar la casa es usarla: nuestro escritorio interactivo — con sus juegos, su MSN y este mismo criterio — está en vivo.</p>
+  <a class="cta" href="https://tidelabstech.github.io/TIDElabs/" target="_blank" rel="noopener">Entrar en TIDElabs →</a>
+  <p class="nota">Aliseo.studio, en vivo: tidelabstech.github.io/Aliseo · HUELLA GO: huella-go.app · ALLINCRU: allincru.com</p>
+</section>
+
+<div id="nav">
+  <button id="ant" aria-label="Anterior">←</button>
+  <div id="puntos"></div>
+  <button id="sig" aria-label="Siguiente">→</button>
+</div>
+<div id="contador">1 / 10</div>
+<script>
+const slides=[...document.querySelectorAll('.slide')]; let i=0;
+const puntos=document.getElementById('puntos');
+slides.forEach((_,k)=>{const d=document.createElement('i'); d.addEventListener('click',()=>ir(k)); puntos.appendChild(d)});
+function ir(n){ i=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,k)=>s.classList.toggle('activa',k===i));
+  [...puntos.children].forEach((d,k)=>d.classList.toggle('on',k===i));
+  document.getElementById('contador').textContent=(i+1)+' / '+slides.length;
+  document.getElementById('progreso').style.width=((i+1)/slides.length*100)+'%'; }
+document.getElementById('sig').addEventListener('click',()=>ir(i+1));
+document.getElementById('ant').addEventListener('click',()=>ir(i-1));
+document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'||e.key===' ')ir(i+1); if(e.key==='ArrowLeft')ir(i-1) });
+let tx=null;
+document.addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+document.addEventListener('touchend',e=>{ if(tx===null)return; const dx=e.changedTouches[0].clientX-tx; if(Math.abs(dx)>48)ir(i+(dx<0?1:-1)); tx=null },{passive:true});
+ir(0);
+</script>
+</body>
+</html>

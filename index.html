@@ -263,6 +263,21 @@ body.win95 .pass95{display:flex;align-items:center;gap:8px;margin-top:12px;font-
 body.win95 .icono .pix.svg svg{width:40px;height:40px;filter:saturate(.72) contrast(1.05) drop-shadow(1px 1px 0 rgba(0,0,0,.35))}
 .juego-svg{width:52px;height:52px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#FFF,#D8D2BC);border:1px solid #8A8574;border-radius:9px}
 .juego-svg svg{width:42px;height:42px}
+/* ===== DECK / RADIO / NOTAS ===== */
+.deck-frame{width:100%;height:540px;border:1px solid #C9C3A8;border-radius:4px;background:#010612}
+.radio-caja{background:linear-gradient(160deg,#0D1F1C,#123128);color:#F7F1E5;border-radius:10px;padding:16px}
+.radio-caja h4{color:#E8B34B;font-size:1.05rem;margin-bottom:2px}
+.radio-caja small{color:#BFD4C8}
+.radio-btn{background:linear-gradient(180deg,#F2C86B,#D9A441);border:1px solid #8A6D1F;color:#231A04;border-radius:50%;width:52px;height:52px;font-size:1.25rem;cursor:pointer;flex:none}
+.radio-fila{display:flex;align-items:center;gap:13px;margin:13px 0}
+.radio-prog{flex:1;height:8px;background:rgba(255,255,255,.18);border-radius:5px;cursor:pointer;position:relative}
+.radio-prog i{position:absolute;inset:0 auto 0 0;background:#E8B34B;border-radius:5px;width:0%}
+.radio-temas{display:flex;flex-direction:column;gap:6px}
+.radio-temas button{background:rgba(255,255,255,.07);border:1px solid rgba(232,179,75,.4);color:#F7F1E5;border-radius:7px;padding:7px 11px;text-align:left;cursor:pointer;font-family:inherit;font-size:.85rem}
+.radio-temas button.on{background:rgba(232,179,75,.25);border-color:#E8B34B}
+.radio-tiempo{font-family:"Courier New",monospace;font-size:.82rem;color:#BFD4C8;min-width:86px;text-align:right}
+.notas-area{width:100%;height:265px;border:1px solid #C9C3A8;border-radius:4px;background:#FFFDEB;padding:11px;font-family:"Lucida Console",monospace;font-size:13.5px;line-height:1.55;resize:vertical;outline:none}
+.notas-pie{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:12px;color:#666}
 /* ===== PAINT ===== */
 .paint-wrap{display:flex;gap:0;border:2px inset #FFF;background:#C0C0C0}
 .paint-tools{width:56px;flex:none;background:#C0C0C0;padding:5px;display:grid;grid-template-columns:1fr 1fr;gap:3px;align-content:start;border-right:2px groove #FFF}
@@ -448,7 +463,7 @@ const ICONOS=[
  {id:"allincru",img:"img/allincru.png",es:"ALLINCRU · LEYENDAS",en:"ALLINCRU · LEGENDS",win:"allincru"},
  {id:"msn",img:"img/msn.jpg",es:"Contacto MSN",en:"MSN Contact",win:"msn"},
  {id:"juegos",img:null,svg:"juegos",es:"Juegos",en:"Games",win:"juegos"},{id:"paint",img:null,svg:"paint",es:"Paint",en:"Paint",win:"paint"},
- {id:"desk",img:"img/probeta.jpg",es:"TIDElabs Desk",en:"TIDElabs Desk",win:"desk",badge:".exe"},
+ {id:"radio",img:null,svg:"radio",es:"Radio de la casa",en:"House Radio",win:"radio"},{id:"notas",img:null,svg:"notas",es:"Notas",en:"Notes",win:"notas"},{id:"desk",img:"img/probeta.jpg",es:"TIDElabs Desk",en:"TIDElabs Desk",win:"desk",badge:".exe"},
  {id:"papelera",img:null,svg:"papelera",es:"Papelera",en:"Recycle Bin",win:"papelera"}
 ];
 let posIconos=JSON.parse(localStorage.getItem("tidelabs_iconos2")||"null");
@@ -501,6 +516,9 @@ paint:'<svg viewBox="0 0 48 48"><path d="M5 30a19 15 0 1 1 8 12c-2.4.4-3.6-1-3.4
 tema:'<svg viewBox="0 0 48 48"><rect x="5" y="7" width="38" height="27" rx="2.6" fill="#D9DEE8" stroke="#5A6274"/><rect x="8" y="10" width="15" height="21" fill="#3C8DFF"/><rect x="23" y="10" width="15" height="21" fill="#008080"/><text x="24.8" y="25" font-family="Tahoma" font-size="10" font-weight="700" fill="#FFF">95</text><rect x="20" y="34" width="8" height="3.6" fill="#9AA2B4"/><rect x="14" y="37.6" width="20" height="3" rx="1.5" fill="#B9C0CF" stroke="#5A6274" stroke-width=".7"/></svg>',
 idioma:'<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="16.5" fill="#3C8DFF" stroke="#1B44A0"/><path d="M12 19c3-2 7-1 9 1-3 2-8 2-9-1ZM27 13c3 0 6 2 7 4-3 1-7-1-7-4ZM30 30c3-1 7 1 8 4-3 1-7-1-8-4Z" fill="#3E9B4F"/><path d="M7.5 24h33M24 7.5c5 5 5 28 0 33M24 7.5c-5 5-5 28 0 33" stroke="#DCE9FF" stroke-width="1.3" fill="none" opacity=".8"/></svg>',
 sonon:'<svg viewBox="0 0 48 48"><path d="M8 19h8l11-9v28L16 29H8Z" fill="#5A6274"/><path d="M31 17a9 9 0 0 1 0 14M34.6 13a14 14 0 0 1 0 22" stroke="#245EDB" stroke-width="2.6" fill="none"/></svg>',
+deck:'<svg viewBox="0 0 48 48"><rect x="9" y="12" width="30" height="22" rx="2" fill="#FFF" stroke="#8A8574" transform="rotate(-4 24 24)"/><rect x="9" y="10" width="30" height="22" rx="2" fill="#0A1E3C" stroke="#D9A441"/><path d="M14 26l6-6 4 4 7-8" stroke="#D9A441" stroke-width="2.4" fill="none"/><circle cx="31" cy="16" r="1.8" fill="#F2C86B"/></svg>',
+radio:'<svg viewBox="0 0 48 48"><path d="M14 26L38 8" stroke="#5A6274" stroke-width="2.4"/><circle cx="39" cy="7" r="2.4" fill="#D43A2F"/><rect x="6" y="24" width="36" height="17" rx="2.6" fill="#3A3F4A" stroke="#22262E"/><rect x="10" y="28" width="17" height="9" fill="#BFE3FF"/><circle cx="34" cy="32.5" r="4.6" fill="#D9DEE8" stroke="#22262E"/><circle cx="34" cy="32.5" r="1.8" fill="#3A3F4A"/><path d="M12 30.4h13M12 34h9" stroke="#245EDB" stroke-width="1.5"/></svg>',
+notas:'<svg viewBox="0 0 48 48"><rect x="11" y="6" width="26" height="36" rx="2" fill="#FFF6BF" stroke="#B8A33D"/><path d="M11 12h26" stroke="#E3C56B" stroke-width="2"/><path d="M15 19h18M15 25h18M15 31h12" stroke="#9AA2B4" stroke-width="1.8"/><path d="M33 30l6-6 3 3-6 6-3.6.8z" fill="#F2B705" stroke="#8A6D1F" stroke-width=".8"/></svg>',
 sonoff:'<svg viewBox="0 0 48 48"><path d="M8 19h8l11-9v28L16 29H8Z" fill="#5A6274"/><path d="M31 18l11 12M42 18L31 30" stroke="#D43A2F" stroke-width="3"/></svg>'
 };
 function pixSVG(clave){ return `<span class="pix svg">${SVG[clave]||""}</span>` }
@@ -520,6 +538,9 @@ const DEFS={
  paint:{icono:null,svg:"paint",ancho:680,es:"Paint",en:"Paint"},
  desk:{icono:"img/probeta.jpg",ancho:500,es:"TIDElabs Desk (.exe)",en:"TIDElabs Desk (.exe)"},
  papelera:{icono:null,svg:"papelera",pix:"🗑️",ancho:420,es:"Papelera de reciclaje",en:"Recycle Bin"},
+ deck:{icono:null,svg:"deck",ancho:880,es:"Deck de inversores",en:"Investor Deck"},
+ radio:{icono:null,svg:"radio",ancho:440,es:"Radio de la casa",en:"House Radio"},
+ notas:{icono:null,svg:"notas",ancho:450,es:"Notas — se guardan de verdad",en:"Notes — actually saved"},
  tareas:{icono:null,svg:"tareas",pix:"📊",ancho:460,es:"Administrador de tareas",en:"Task Manager"}
 };
 function tituloDe(id){ return LANG==="es"?DEFS[id].es:DEFS[id].en }
@@ -570,6 +591,8 @@ function abrirVentana(id){
   if(id==="msn")msnInit();
   if(id==="paint")paintInit();
   if(id==="desk")deskInit();
+  if(id==="radio")radioInit();
+  if(id==="notas")notasInit();
   if(innerWidth<760)el.classList.add("max");
 }
 function cerrarVentana(id){ const v=VENTANAS[id]; if(!v)return; v.el.remove(); delete VENTANAS[id];
@@ -582,6 +605,9 @@ function pintarMenus(){
     ["aliseo","img/aliseo.jpg",null,"Aliseo.studio",t("Canciones personalizadas","Personalised songs")],
     ["allincru","img/allincru.png",null,"ALLINCRU",t("Laboratorio de trading","Trading lab")],
     ["msn","img/msn.jpg",null,t("Contacto MSN","MSN Contact"),t("Habla con la casa","Talk to the house")],
+    ["deck",null,"svg:deck",t("Deck de inversores","Investor Deck"),t("La presentación, dentro","The pitch, inside")],
+    ["radio",null,"svg:radio",t("Radio de la casa","House Radio"),t("El himno de Aliseo","The Aliseo anthem")],
+    ["notas",null,"svg:notas",t("Notas","Notes"),t("Se guardan de verdad","Actually saved")],
     ["juegos",null,"svg:juegos",t("Juegos","Games"),t("Buscaminas y Solitario","Minesweeper & Solitaire")],["paint",null,"svg:paint","Paint",t("El de siempre, con spray","The classic, with spray")]];
   $("#menu-proyectos").innerHTML=proy.map(p=>`<button class="mi" data-win="${p[0]}">${p[1]?`<img src="${p[1]}" alt="">`:p[2]&&p[2].startsWith("svg:")?pixSVG(p[2].slice(4)):`<span class="pix">${p[2]}</span>`}<span>${p[3]}<small>${p[4]}</small></span></button>`).join("");
   const xp=TEMA==="xp";
@@ -674,7 +700,8 @@ their own communities, plus a studio billing clients.
 The company is incorporated with the capital injection.
 Until then: clients, product and community.
 
-Shall we talk? Open the MSN Contact on the desktop.`)}</textarea>` },
+Shall we talk? Open the MSN Contact on the desktop.`)}</textarea>
+<p style="margin-top:10px"><button class="boton-xp" onclick="abrirVentana('deck')" style="font-weight:700">📊 ${t("Abrir el deck de inversores","Open the investor deck")}</button></p>` },
 huella(){ return `<div class="cabecera-proy"><img src="img/huella.png" alt="Icono oficial de HUELLA GO: la huella dorada"><div><h3>HUELLA GO</h3><span class="estado est-dev">${t("EN DESARROLLO","IN DEVELOPMENT")}</span></div></div>
 <p>${t("Canarias convertida en tablero: caminas, conquistas territorio y tu cabra BAIFO comenta la jugada con mala leche y buen fondo. Ya se prueba en la calle, con rutas reales.","The Canaries turned into a game board: you walk, conquer territory, and BAIFO the goat commentates with attitude and a good heart. Already street-tested on real routes.")}</p>
 <p>🌐 <span class="enlace" onclick="${RED("https://huella-go.app")}">huella-go.app</span></p>` },
@@ -718,6 +745,24 @@ paint(){ return `<div class="paint-wrap">
 <p style="font-size:12px;color:#555;margin-top:7px">${t("El Paint de siempre: dibuja, haz spray sobre la probeta y guarda tu obra como PNG.","Classic Paint: draw, spray over everything, and save your work as a PNG.")}</p>` },
 papelera(){ return `<h3>${t("Papelera de reciclaje","Recycle Bin")}</h3>
 <p>${t("3 elementos:","3 items:")}</p><p>🗂️ ${t("ideas-a-las-3am.zip (eran buenas, pero a las 3 am)","3am-ideas.zip (they were good, but at 3 am)")}<br>📄 ${t("logo-definitivo-FINAL-v7-ahora-si.png","logo-final-FINAL-v7-really.png")}<br>🧦 ${t("un calcetín (el otro sigue en paradero desconocido)","one sock (its pair is still missing)")}</p>` },
+deck(){ return `<iframe class="deck-frame" src="deck/index.html" title="Deck de inversores de TIDElabs"></iframe>
+<p style="margin-top:8px;font-size:12.5px;color:#555">${t("El deck vive dentro del escritorio. Para enviarlo suelto:","The deck lives inside the desktop. To send it on its own:")} <span class="enlace" onclick="window.open('https://tidelabstech.github.io/TIDElabs/deck/','_blank')">tidelabstech.github.io/TIDElabs/deck</span></p>` },
+radio(){ return `<div class="radio-caja">
+  <h4>📻 ${t("Radio de la casa","House Radio")}</h4>
+  <small>${t("El himno de Aliseo, sonando en el laboratorio","The Aliseo anthem, playing in the lab")}</small>
+  <div class="radio-fila"><button class="radio-btn" id="radio-play" aria-label="Reproducir o pausar">▶</button>
+    <div class="radio-prog" id="radio-prog"><i></i></div><span class="radio-tiempo" id="radio-tiempo">0:00 / 0:00</span></div>
+  <div class="radio-temas" id="radio-temas">
+    ${[["radio/himno-completo.mp3",t("El himno · completo","The anthem · full")+" · 2:31"],
+       ["radio/corto-1.mp3",t("Estribillo · Brisa","Chorus · Brisa")],
+       ["radio/corto-2.mp3",t("Estribillo · Alisio","Chorus · Alisio")],
+       ["radio/corto-3.mp3",t("Estribillo · Marea","Chorus · Marea")]].map((x,i)=>`<button data-src="${x[0]}" class="${i===0?"on":""}">${x[1]}</button>`).join("")}
+  </div>
+  <audio id="radio-audio" src="radio/himno-completo.mp3" preload="metadata"></audio>
+  <p style="font-size:11.5px;color:#9DB8A8;margin-top:10px">${t("«Tu boda no pide playlist, pide himno» — hecho en Canarias, sin SGAE.","“Your wedding doesn't need a playlist, it needs an anthem” — made in the Canaries.")}</p>
+</div>` },
+notas(){ return `<textarea class="notas-area" id="notas-area" placeholder="${t("Escribe aquí. Esto SÍ se guarda: vive en este equipo, en tu navegador.","Type here. This one DOES save: it lives on this machine, in your browser.")}"></textarea>
+<div class="notas-pie"><span id="notas-estado">${t("Sin notas todavía","No notes yet")}</span><button class="boton-xp" id="notas-borrar">${t("Borrar todo","Delete all")}</button></div>` },
 tareas(){ const filas=Object.keys(VENTANAS).map(k=>`<div class="proyecto"><div><h4>${tituloDe(k)}</h4><p>${t("En ejecución","Running")}</p></div><button class="boton-xp" style="margin-left:auto" onclick="cerrarVentana('${k}')">${t("Finalizar tarea","End task")}</button></div>`).join("");
   return `<h3>${t("Aplicaciones en ejecución","Running applications")}</h3>${filas||`<p>${t("No hay ventanas abiertas.","No windows open.")}</p>`}<p><button class="boton-xp" onclick="abrirVentana('tareas');Object.keys(VENTANAS).forEach(k=>{if(k!=='tareas')return});const v=VENTANAS['tareas'];v.el.querySelector('.cuerpo').innerHTML=CONTENIDOS.tareas()">${t("Actualizar","Refresh")}</button></p>` }
 };
@@ -730,6 +775,9 @@ const ESTADOS={
  msn(){ return `<span>${t("Conectado · responde la casa","Connected · the house replies")}</span>` },
  desk(){ return `<span>${t("Maqueta · el instalador llega con la publicación","Mock-up · the installer arrives at launch")}</span>` },
  buscaminas(){ return `<span>${t("Que no te explote el lunes","Don't let Monday blow you up")}</span>` },
+ deck(){ return `<span>${t("10 diapositivas · flechas o deslizar","10 slides · arrows or swipe")}</span>` },
+ radio(){ return `<span>${t("Suena el himno de la casa","The house anthem is playing")}</span>` },
+ notas(){ return `<span>${t("Guardado automático en este equipo","Autosaved on this machine")}</span>` },
  solitario(){ return `<span>${t("Klondike · roba de 1 en 1","Klondike · draw 1")}</span>` }
 };
 
@@ -926,6 +974,33 @@ function paintInit(){
   $("#paint-deshacer").onclick=()=>{ if(PT.pila.length>1){ PT.pila.pop(); const img=new Image(); img.onload=()=>{ cx.clearRect(0,0,cv.width,cv.height); cx.drawImage(img,0,0) }; img.src=PT.pila[PT.pila.length-1] } };
   $("#paint-nuevo").onclick=()=>{ cx.fillStyle="#FFF"; cx.fillRect(0,0,cv.width,cv.height); guarda(); SFX.cerrar() };
   $("#paint-guardar").onclick=()=>{ const a=document.createElement("a"); a.download="mi-obra-tidelabs.png"; a.href=cv.toDataURL("image/png"); a.click(); SFX.ganar() };
+}
+
+/* ---------- RADIO de la casa ---------- */
+function radioInit(){
+  const au=$("#radio-audio"), btn=$("#radio-play"), prog=$("#radio-prog"), barra=prog?prog.querySelector("i"):null, tiempo=$("#radio-tiempo");
+  if(!au||!btn)return;
+  const fmt=x=>{ if(!isFinite(x))return "0:00"; x=Math.floor(x); return Math.floor(x/60)+":"+String(x%60).padStart(2,"0") };
+  btn.onclick=()=>{ if(au.paused){ au.play().catch(()=>{}); btn.textContent="⏸" } else { au.pause(); btn.textContent="▶" } };
+  au.addEventListener("play",()=>btn.textContent="⏸");
+  au.addEventListener("pause",()=>btn.textContent="▶");
+  au.addEventListener("timeupdate",()=>{ if(barra&&au.duration)barra.style.width=(au.currentTime/au.duration*100)+"%"; if(tiempo)tiempo.textContent=fmt(au.currentTime)+" / "+fmt(au.duration) });
+  au.addEventListener("loadedmetadata",()=>{ if(tiempo)tiempo.textContent="0:00 / "+fmt(au.duration) });
+  au.addEventListener("ended",()=>{ const temas=[...document.querySelectorAll("#radio-temas button")]; const i=temas.findIndex(b=>b.classList.contains("on")); const sig=temas[(i+1)%temas.length]; if(sig)sig.click() });
+  au.addEventListener("error",()=>{ const caja=au.closest(".radio-caja"); if(caja)caja.insertAdjacentHTML("beforeend",`<p style="color:#F2C86B;font-size:12px;margin-top:8px">${t("La radio suena en la versión en vivo del escritorio.","The radio plays on the live version of the desktop.")}</p>`) },{once:true});
+  if(prog)prog.onclick=e=>{ const r=prog.getBoundingClientRect(); if(au.duration)au.currentTime=(e.clientX-r.left)/r.width*au.duration };
+  $$("#radio-temas button").forEach(b=>b.onclick=()=>{ $$("#radio-temas button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); au.src=b.dataset.src; au.play().catch(()=>{}); SFX.carta() });
+}
+
+/* ---------- NOTAS que guardan ---------- */
+function notasInit(){
+  const area=$("#notas-area"), est=$("#notas-estado"); if(!area)return;
+  area.value=localStorage.getItem("tidelabs_notas")||"";
+  const pinta=()=>{ if(est)est.textContent=area.value?t("Guardado ✓ · ","Saved ✓ · ")+new Date().toLocaleTimeString(LANG==="es"?"es-ES":"en-GB",{hour:"2-digit",minute:"2-digit"})+" · "+area.value.length+" "+t("caracteres","chars"):t("Sin notas todavía","No notes yet") };
+  pinta();
+  let tmp=null;
+  area.addEventListener("input",()=>{ clearTimeout(tmp); tmp=setTimeout(()=>{ localStorage.setItem("tidelabs_notas",area.value); pinta() },350) });
+  const b=$("#notas-borrar"); if(b)b.onclick=()=>{ if(b.dataset.seguro){ area.value=""; localStorage.removeItem("tidelabs_notas"); b.textContent=t("Borrar todo","Delete all"); delete b.dataset.seguro; pinta() } else { b.dataset.seguro="1"; b.textContent=t("¿Seguro? Pulsa otra vez","Sure? Click again") } };
 }
 /* ---------- Desk instalable (PWA) ---------- */
 let PROMPT_INSTALACION=null;
