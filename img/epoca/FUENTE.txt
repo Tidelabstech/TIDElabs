@@ -1,4 +1,4 @@
-Iconos de sistema del OS de TIDElabs
-Origen: set «Basic Icons» (2008), publicado en rw-designer.com
-Licencia: Release to Public Domain (dominio público)
-Archivos originales .ico conservados en el historial del proyecto.
+Iconos de sistema del OS de TIDElabs — todos DOMINIO PÚBLICO (vía rw-designer.com)
+- Modo XP: «Windows XP Desktop Icons» (My computer, papeleras) — Release to Public Domain.
+- Modo 95: «Windows 95 Desktop Icons» (My Computer, papeleras) + Joy.ico de «Windows 95 Hardware and Devices Icons» — Public Domain.
+- Ambos modos (Paint, bloc de notas, WMP): set «Basic Icons» (2008) — Release to Public Domain.

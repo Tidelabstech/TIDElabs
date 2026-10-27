@@ -1,4 +1,5 @@
-Cursores del OS de TIDElabs
-Set: «Windows Transparent Cursors» (2007) de The Sword of the Heart, rw-designer.com
-Licencia: CC BY (atribución requerida) — esta nota es la atribución.
-Convertidos de .cur a .png conservando su punto activo (hotspot).
+Cursores del OS de TIDElabs — DOMINIO PÚBLICO (vía rw-designer.com)
+- Modo XP: «Windows XP Style Cursors» — Release to Public Domain. El reloj (xp_busy.ani, animado)
+  se sirve como PNG con su primer fotograma: CSS no admite .ani.
+- Modo 95: «Original Windows 95/98 Cursors» (darix555) — Release to Public Domain.
+Convertidos de .cur/.ani a .png conservando su punto activo (hotspot).
