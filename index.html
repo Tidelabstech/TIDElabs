@@ -281,6 +281,23 @@ body.win95 .icono .pix.svg svg{width:40px;height:40px;filter:saturate(.72) contr
 #salva.activo{display:block}
 #salva canvas{width:100%;height:100%;display:block}
 #salva-probeta{position:absolute;width:112px;height:112px;border-radius:14px;box-shadow:0 0 46px rgba(217,164,65,.55)}
+/* ===== INTERNET EXPLORER de la casa ===== */
+.ie{display:flex;flex-direction:column;gap:0;font-family:Tahoma,sans-serif}
+.ie-menus{font-size:.8rem;color:#333;padding:3px 2px;border-bottom:1px solid #D8D2BC}
+.ie-menus span{margin-right:13px}
+.ie-tools{display:flex;align-items:center;gap:5px;padding:6px 2px;border-bottom:1px solid #D8D2BC;flex-wrap:wrap}
+.ie-tools button{background:linear-gradient(180deg,#FDFDFB,#ECE9DC);border:1px solid #C9C3A8;border-radius:5px;padding:5px 10px;font-family:inherit;font-size:.8rem;cursor:pointer}
+.ie-tools button:hover{border-color:#D9A441}
+#ie-throbber{width:30px;height:30px;margin-left:auto}
+#ie-throbber.girando{animation:iegiro 1.1s linear infinite}
+@keyframes iegiro{to{transform:rotate(360deg)}}
+.ie-dir{display:flex;align-items:center;gap:7px;padding:6px 2px;border-bottom:1px solid #D8D2BC}
+.ie-dir label{font-size:.8rem;color:#555}
+#ie-url{flex:1;border:1px solid #ACA899;border-radius:3px;padding:5px 8px;font-family:inherit;font-size:.85rem;background:#FFF}
+#ie-ir{background:linear-gradient(180deg,#7FB069,#4E7A3A);color:#FFF;border:1px solid #3A5C2C;border-radius:5px;padding:5px 12px;font-family:inherit;font-size:.8rem;cursor:pointer}
+#ie-frame{width:100%;height:470px;border:1px solid #ACA899;background:#FFF}
+.ie-estado{display:flex;justify-content:space-between;border:1px solid #D8D2BC;border-top:none;background:#F1EFE4;font-size:.76rem;color:#555;padding:3px 8px}
+.ie-ayuda{font-size:11.5px;color:#777;margin-top:7px}
 /* ===== DECK / RADIO / NOTAS ===== */
 .deck-frame{width:100%;height:540px;border:1px solid #C9C3A8;border-radius:4px;background:#010612}
 .radio-caja{background:linear-gradient(160deg,#0D1F1C,#123128);color:#F7F1E5;border-radius:10px;padding:16px}
@@ -509,7 +526,7 @@ const ICONOS=[
  {id:"msn",img:"img/msn.jpg",es:"Contacto MSN",en:"MSN Contact",win:"msn"},
  {id:"juegos",img:null,svg:"juegos",modo:"juegos",es:"Juegos",en:"Games",win:"juegos"},{id:"paint",img:"img/epoca/paint.png",es:"Paint",en:"Paint",win:"paint"},
  {id:"radio",img:"img/epoca/wmp.png",es:"Radio de la casa",en:"House Radio",win:"radio"},{id:"notas",img:null,svg:"notas",es:"Notas",en:"Notes",win:"notas"},{id:"desk",img:"img/probeta.jpg",es:"TIDElabs Desk",en:"TIDElabs Desk",win:"desk",badge:".exe"},
- {id:"papelera",img:null,modo:"papelera",es:"Papelera",en:"Recycle Bin",win:"papelera"}
+ {id:"ie",img:"img/epoca/ie.png",es:"Internet Explorer",en:"Internet Explorer",win:"ie"},{id:"papelera",img:null,modo:"papelera",es:"Papelera",en:"Recycle Bin",win:"papelera"}
 ];
 let posIconos=JSON.parse(localStorage.getItem("tidelabs_iconos2")||"null");
 function pintarIconos(){
@@ -640,6 +657,7 @@ function abrirVentana(id){
   if(id==="notas")notasInit();
   if(id==="props")propsInit();
   if(id==="prop")propInit();
+  if(id==="ie")ieInit();
   if(innerWidth<760)el.classList.add("max");
 }
 function cerrarVentana(id){ const v=VENTANAS[id]; if(!v)return; v.el.remove(); delete VENTANAS[id];
@@ -653,6 +671,7 @@ function pintarMenus(){
     ["allincru","img/allincru.png",null,"ALLINCRU",t("Laboratorio de trading","Trading lab")],
     ["msn","img/msn.jpg",null,t("Contacto MSN","MSN Contact"),t("Habla con la casa","Talk to the house")],
     ["deck",null,"svg:deck",t("Deck de inversores","Investor Deck"),t("La presentación, dentro","The pitch, inside")],
+    ["ie","img/epoca/ie.png",null,"Internet Explorer",t("HUELLAGO, sin salir de casa","HUELLAGO, without leaving home")],
     ["radio","img/epoca/wmp.png",null,t("Radio de la casa","House Radio"),t("El himno de Aliseo","The Aliseo anthem")],
     ["notas",null,"svg:notas",t("Notas","Notes"),t("Se guardan de verdad","Actually saved")],
     ["juegos",null,"svg:juegos",t("Juegos","Games"),t("Buscaminas y Solitario","Minesweeper & Solitaire")],["paint","img/epoca/paint.png",null,"Paint",t("El de siempre, con spray","The classic, with spray")]];
@@ -1090,7 +1109,8 @@ const PROPS_ICONO={
   radio:["Utilidad de la casa","Suena el himno real de Aliseo y los estribillos de sus voces."],
   notas:["Utilidad","El bloc que SÍ se guarda: vive en este equipo, en tu navegador."],
   deck:["Inversores","La presentación de la casa en 10 diapositivas, dentro del escritorio."],
-  desk:["Sistema","Este mismo escritorio, instalable como app (PWA) y usable sin conexión."]
+  desk:["Sistema","Este mismo escritorio, instalable como app (PWA) y usable sin conexión."],
+  ie:["Internet","El Explorer de la casa: abre en HUELLAGO, pero tiene barra de direcciones y todo."]
 };
 let propId=null, propWin=null;
 function abrirPropIcono(ic){ propId=ic.id; propWin=ic.win; abrirVentana("prop") }
@@ -1135,6 +1155,39 @@ function propsInit(){
 }
 ACCIONES.props=()=>abrirVentana("props");
 ICONOS.forEach(ic=>{ ACCIONES["abrir-"+ic.win]=()=>abrirVentana(ic.win); ACCIONES["prop-"+ic.id]=()=>abrirPropIcono(ic) });
+
+/* ---------- INTERNET EXPLORER de la casa ---------- */
+const IE_HOME="https://www.huella-go.app/";
+DEFS.ie={icono:"img/epoca/ie.png",ancho:900,es:"Internet Explorer — HUELLAGO",en:"Internet Explorer — HUELLAGO"};
+CONTENIDOS.ie=()=>`<div class="ie">
+  <div class="ie-menus"><span>${t("Archivo","File")}</span><span>${t("Edición","Edit")}</span><span>${t("Ver","View")}</span><span>${t("Favoritos","Favorites")}</span><span>${t("Herramientas","Tools")}</span><span>${t("Ayuda","Help")}</span></div>
+  <div class="ie-tools">
+    <button id="ie-atras">⬅ ${t("Atrás","Back")}</button><button id="ie-adelante" title="${t("Adelante","Forward")}">➡</button>
+    <button id="ie-detener">✖ ${t("Detener","Stop")}</button><button id="ie-actualizar">⟳ ${t("Actualizar","Refresh")}</button>
+    <button id="ie-inicio">🏠 ${t("Inicio","Home")}</button>
+    <img id="ie-throbber" class="girando" src="img/epoca/ie.png" alt="">
+  </div>
+  <div class="ie-dir"><label>${t("Dirección","Address")}</label><input id="ie-url" value="${IE_HOME}" spellcheck="false"><button id="ie-ir">${t("Ir a","Go")} ⏎</button></div>
+  <iframe id="ie-frame" src="${IE_HOME}" title="Internet Explorer — HUELLAGO"></iframe>
+  <div class="ie-estado"><span id="ie-estado-txt">${t("Abriendo huella-go.app…","Opening huella-go.app…")}</span><span>🌐 Internet</span></div>
+  <p class="ie-ayuda">${t("El Explorer abre en HUELLAGO, pero la barra de direcciones funciona: visita Aliseo o la web que quieras sin salir del escritorio. ¿Una página se niega a vivir enmarcada?","The Explorer starts at HUELLAGO, but the address bar works: visit Aliseo or any site without leaving the desktop. A page refusing to live in a frame?")} <span class="enlace" id="ie-fuera">${t("Abrir HUELLAGO fuera","Open HUELLAGO outside")}</span></p>
+</div>`;
+function ieInit(){
+  const fr=$("#ie-frame"), url=$("#ie-url"), th=$("#ie-throbber"), est=$("#ie-estado-txt");
+  if(!fr)return;
+  const navegando=()=>{ th.classList.add("girando"); est.textContent=t("Abriendo página…","Opening page…") };
+  const listo=()=>{ th.classList.remove("girando"); est.textContent=t("Listo","Done"); url.value=fr.src };
+  fr.addEventListener("load",listo);
+  const ir=u=>{ u=(u||"").trim(); if(!u)return; if(!/^https?:\/\//i.test(u))u="https://"+u; navegando(); fr.src=u; url.value=u };
+  $("#ie-ir").onclick=()=>ir(url.value);
+  url.addEventListener("keydown",e=>{ if(e.key==="Enter")ir(url.value) });
+  $("#ie-inicio").onclick=()=>ir(IE_HOME);
+  $("#ie-actualizar").onclick=()=>{ navegando(); const u=fr.src; fr.src="about:blank"; setTimeout(()=>fr.src=u,60) };
+  $("#ie-atras").onclick=()=>{ try{ fr.contentWindow.history.back() }catch(_){ } };
+  $("#ie-adelante").onclick=()=>{ try{ fr.contentWindow.history.forward() }catch(_){ } };
+  $("#ie-detener").onclick=()=>{ try{ fr.contentWindow.stop() }catch(_){ } th.classList.remove("girando"); est.textContent=t("Detenido. Como los módems de antes, pero sin el ruido.","Stopped.") };
+  $("#ie-fuera").onclick=()=>window.open(IE_HOME,"_blank");
+}
 /* ---------- RADIO de la casa ---------- */
 function radioInit(){
   const au=$("#radio-audio"), btn=$("#radio-play"), prog=$("#radio-prog"), barra=prog?prog.querySelector("i"):null, tiempo=$("#radio-tiempo");
