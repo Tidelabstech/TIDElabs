@@ -1,0 +1,4 @@
+Cursores del OS de TIDElabs
+Set: «Windows Transparent Cursors» (2007) de The Sword of the Heart, rw-designer.com
+Licencia: CC BY (atribución requerida) — esta nota es la atribución.
+Convertidos de .cur a .png conservando su punto activo (hotspot).

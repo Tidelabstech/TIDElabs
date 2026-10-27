@@ -291,6 +291,13 @@ body.win95 .icono .pix.svg svg{width:40px;height:40px;filter:saturate(.72) contr
 .paint-actual{width:30px;height:30px;border:2px inset #FFF;flex:none}
 .paint-color{width:17px;height:17px;border:1px solid #666;cursor:pointer;padding:0}
 .paint-acciones{display:flex;gap:6px;margin-left:auto}
+/* ===== CURSORES DE ÉPOCA (set Windows Transparent, CC-BY) ===== */
+body,.win .cuerpo{cursor:url("img/cursores/normal.png") 0 0,auto}
+.icono,.tarea,.mi,.enlace,a,.msn-rapidas button,.radio-temas button,.paint-color,.carta,.sol-hueco,.minas-cara{cursor:url("img/cursores/hand.png") 11 4,pointer}
+input,textarea,.notas-area{cursor:url("img/cursores/text.png") 19 15,text}
+.win .titlebar:active{cursor:url("img/cursores/move.png") 11 11,move}
+#boot,#boot95{cursor:url("img/cursores/wait.png") 2 2,wait}
+button:disabled{cursor:url("img/cursores/no.png") 16 15,not-allowed}
 </style>
 </head>
 <body>
@@ -456,15 +463,15 @@ function reiniciarCon(tema){
 
 /* ---------- iconos del escritorio ---------- */
 const ICONOS=[
- {id:"mypc",img:null,svg:"mypc",es:"Mi PC",en:"My PC",win:"mypc"},
- {id:"inversores",img:null,svg:"inversores",es:"Inversores.txt",en:"Investors.txt",win:"inversores"},
+ {id:"mypc",img:"img/epoca/mypc.png",es:"Mi PC",en:"My PC",win:"mypc"},
+ {id:"inversores",img:"img/epoca/notepad.png",es:"Inversores.txt",en:"Investors.txt",win:"inversores"},
  {id:"huella",img:"img/huella.png",es:"HUELLA GO",en:"HUELLA GO",win:"huella"},
  {id:"aliseo",img:"img/aliseo.jpg",es:"Aliseo.studio",en:"Aliseo.studio",win:"aliseo"},
  {id:"allincru",img:"img/allincru.png",es:"ALLINCRU · LEYENDAS",en:"ALLINCRU · LEGENDS",win:"allincru"},
  {id:"msn",img:"img/msn.jpg",es:"Contacto MSN",en:"MSN Contact",win:"msn"},
- {id:"juegos",img:null,svg:"juegos",es:"Juegos",en:"Games",win:"juegos"},{id:"paint",img:null,svg:"paint",es:"Paint",en:"Paint",win:"paint"},
- {id:"radio",img:null,svg:"radio",es:"Radio de la casa",en:"House Radio",win:"radio"},{id:"notas",img:null,svg:"notas",es:"Notas",en:"Notes",win:"notas"},{id:"desk",img:"img/probeta.jpg",es:"TIDElabs Desk",en:"TIDElabs Desk",win:"desk",badge:".exe"},
- {id:"papelera",img:null,svg:"papelera",es:"Papelera",en:"Recycle Bin",win:"papelera"}
+ {id:"juegos",img:null,svg:"juegos",es:"Juegos",en:"Games",win:"juegos"},{id:"paint",img:"img/epoca/paint.png",es:"Paint",en:"Paint",win:"paint"},
+ {id:"radio",img:"img/epoca/wmp.png",es:"Radio de la casa",en:"House Radio",win:"radio"},{id:"notas",img:null,svg:"notas",es:"Notas",en:"Notes",win:"notas"},{id:"desk",img:"img/probeta.jpg",es:"TIDElabs Desk",en:"TIDElabs Desk",win:"desk",badge:".exe"},
+ {id:"papelera",img:"img/epoca/recycle.png",es:"Papelera",en:"Recycle Bin",win:"papelera"}
 ];
 let posIconos=JSON.parse(localStorage.getItem("tidelabs_iconos2")||"null");
 function pintarIconos(){
@@ -526,8 +533,8 @@ function pixSVG(clave){ return `<span class="pix svg">${SVG[clave]||""}</span>` 
 /* ---------- gestor de ventanas ---------- */
 const VENTANAS={}; let Z=100, FOCO=null;
 const DEFS={
- mypc:{icono:null,svg:"mypc",pix:"🧪",ancho:560,es:"Mi PC — la casa",en:"My PC — the house"},
- inversores:{icono:null,svg:"inversores",pix:"📈",ancho:520,es:"Inversores.txt — Bloc de notas",en:"Investors.txt — Notepad"},
+ mypc:{icono:"img/epoca/mypc.png",pix:"🧪",ancho:560,es:"Mi PC — la casa",en:"My PC — the house"},
+ inversores:{icono:"img/epoca/notepad.png",pix:"📈",ancho:520,es:"Inversores.txt — Bloc de notas",en:"Investors.txt — Notepad"},
  huella:{icono:"img/huella.png",ancho:480,es:"HUELLA GO",en:"HUELLA GO"},
  aliseo:{icono:"img/aliseo.jpg",ancho:480,es:"Aliseo.studio",en:"Aliseo.studio"},
  allincru:{icono:"img/allincru.png",ancho:520,es:"ALLINCRU · LEYENDAS",en:"ALLINCRU · LEGENDS"},
@@ -535,11 +542,11 @@ const DEFS={
  juegos:{icono:null,svg:"juegos",pix:"🎮",ancho:400,es:"Juegos",en:"Games"},
  buscaminas:{icono:null,svg:"mina",pix:"💣",ancho:330,es:"Buscaminas",en:"Minesweeper"},
  solitario:{icono:null,svg:"cartas",pix:"🂡",ancho:620,es:"Solitario",en:"Solitaire"},
- paint:{icono:null,svg:"paint",ancho:680,es:"Paint",en:"Paint"},
+ paint:{icono:"img/epoca/paint.png",ancho:680,es:"Paint",en:"Paint"},
  desk:{icono:"img/probeta.jpg",ancho:500,es:"TIDElabs Desk (.exe)",en:"TIDElabs Desk (.exe)"},
- papelera:{icono:null,svg:"papelera",pix:"🗑️",ancho:420,es:"Papelera de reciclaje",en:"Recycle Bin"},
+ papelera:{icono:"img/epoca/recycle.png",pix:"🗑️",ancho:420,es:"Papelera de reciclaje",en:"Recycle Bin"},
  deck:{icono:null,svg:"deck",ancho:880,es:"Deck de inversores",en:"Investor Deck"},
- radio:{icono:null,svg:"radio",ancho:440,es:"Radio de la casa",en:"House Radio"},
+ radio:{icono:"img/epoca/wmp.png",ancho:440,es:"Radio de la casa",en:"House Radio"},
  notas:{icono:null,svg:"notas",ancho:450,es:"Notas — se guardan de verdad",en:"Notes — actually saved"},
  tareas:{icono:null,svg:"tareas",pix:"📊",ancho:460,es:"Administrador de tareas",en:"Task Manager"}
 };
@@ -606,17 +613,17 @@ function pintarMenus(){
     ["allincru","img/allincru.png",null,"ALLINCRU",t("Laboratorio de trading","Trading lab")],
     ["msn","img/msn.jpg",null,t("Contacto MSN","MSN Contact"),t("Habla con la casa","Talk to the house")],
     ["deck",null,"svg:deck",t("Deck de inversores","Investor Deck"),t("La presentación, dentro","The pitch, inside")],
-    ["radio",null,"svg:radio",t("Radio de la casa","House Radio"),t("El himno de Aliseo","The Aliseo anthem")],
+    ["radio","img/epoca/wmp.png",null,t("Radio de la casa","House Radio"),t("El himno de Aliseo","The Aliseo anthem")],
     ["notas",null,"svg:notas",t("Notas","Notes"),t("Se guardan de verdad","Actually saved")],
-    ["juegos",null,"svg:juegos",t("Juegos","Games"),t("Buscaminas y Solitario","Minesweeper & Solitaire")],["paint",null,"svg:paint","Paint",t("El de siempre, con spray","The classic, with spray")]];
+    ["juegos",null,"svg:juegos",t("Juegos","Games"),t("Buscaminas y Solitario","Minesweeper & Solitaire")],["paint","img/epoca/paint.png",null,"Paint",t("El de siempre, con spray","The classic, with spray")]];
   $("#menu-proyectos").innerHTML=proy.map(p=>`<button class="mi" data-win="${p[0]}">${p[1]?`<img src="${p[1]}" alt="">`:p[2]&&p[2].startsWith("svg:")?pixSVG(p[2].slice(4)):`<span class="pix">${p[2]}</span>`}<span>${p[3]}<small>${p[4]}</small></span></button>`).join("");
   const xp=TEMA==="xp";
-  const sis=[["mypc","svg:mypc",t("Mi PC","My PC")],["inversores","svg:inversores","Inversores.txt"],
+  const sis=[["mypc","img:img/epoca/mypc.png",t("Mi PC","My PC")],["inversores","img:img/epoca/notepad.png","Inversores.txt"],
     ["tema","svg:tema",xp?t("Reiniciar como Windows 95","Restart as Windows 95"):t("Reiniciar como Windows XP","Restart as Windows XP")],
     ["idioma","svg:idioma",LANG==="es"?"English":"Español"],
     ["sonido",SONIDO?"svg:sonon":"svg:sonoff",SONIDO?t("Silenciar sonidos","Mute sounds"):t("Activar sonidos","Unmute sounds")],
-    ["tareas","svg:tareas",t("Administrador de tareas","Task Manager")],["papelera","svg:papelera",t("Papelera","Recycle Bin")]];
-  $("#menu-sistema").innerHTML=sis.map(s=>`<button class="mi" data-sis="${s[0]}">${s[1].startsWith("svg:")?pixSVG(s[1].slice(4)):`<span class="pix">${s[1]}</span>`}<span>${s[2]}</span></button>`).join("");
+    ["tareas","svg:tareas",t("Administrador de tareas","Task Manager")],["papelera","img:img/epoca/recycle.png",t("Papelera","Recycle Bin")]];
+  $("#menu-sistema").innerHTML=sis.map(s=>`<button class="mi" data-sis="${s[0]}">${s[1].startsWith("svg:")?pixSVG(s[1].slice(4)):s[1].startsWith("img:")?`<img src="${s[1].slice(4)}" alt="">`:`<span class="pix">${s[1]}</span>`}<span>${s[2]}</span></button>`).join("");
   $$("#menu-inicio .mi").forEach(b=>b.addEventListener("click",()=>{
     cerrarMenu();
     if(b.dataset.win)abrirVentana(b.dataset.win);
