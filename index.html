@@ -274,6 +274,7 @@ body.win95 #baifo{cursor:url("img/cursores/win95/hand.png") 10 10,pointer}
 #baifo-zzz{position:absolute;top:-8px;right:2px;font-size:19px;opacity:0;pointer-events:none}
 #baifo-zzz.visible{opacity:1;animation:bfzzz 1.6s ease-in-out infinite}
 @keyframes bfzzz{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-7px) rotate(8deg)}}
+.bf-star{position:absolute;left:50%;top:36%;font-size:15px;pointer-events:none;z-index:3;text-shadow:0 0 6px rgba(255,210,60,.9)}
 /* ===== PROPIEDADES + SALVAPANTALLAS ===== */
 .props-tabs{display:flex;gap:3px;border-bottom:2px solid #ACA899;margin-bottom:12px;flex-wrap:wrap}
 .props-tab{font-family:Tahoma,sans-serif;font-size:.83rem;padding:6px 13px;border:1px solid #ACA899;border-bottom:none;border-radius:7px 7px 0 0;background:#E4E1D5;cursor:pointer}
@@ -537,7 +538,7 @@ const ICONOS=[
  {id:"msn",img:"img/msn.jpg",es:"Contacto MSN",en:"MSN Contact",win:"msn"},
  {id:"juegos",img:null,svg:"juegos",modo:"juegos",es:"Juegos",en:"Games",win:"juegos"},{id:"paint",img:"img/epoca/paint.png",es:"Paint",en:"Paint",win:"paint"},
  {id:"radio",img:"img/epoca/wmp.png",es:"Radio de la casa",en:"House Radio",win:"radio"},{id:"notas",img:null,svg:"notas",es:"Notas",en:"Notes",win:"notas"},{id:"desk",img:"img/probeta.jpg",es:"TIDElabs Desk",en:"TIDElabs Desk",win:"desk",badge:".exe"},
- {id:"ie",img:"img/epoca/ie.png",es:"Internet Explorer",en:"Internet Explorer",win:"ie"},{id:"papelera",img:null,modo:"papelera",es:"Papelera",en:"Recycle Bin",win:"papelera"}
+ {id:"ie",img:"img/epoca/ie.png",es:"Internet Explorer",en:"Internet Explorer",win:"ie"},{id:"baifo",img:"img/baifo/quieto.png",es:"BAIFO",en:"BAIFO",win:"baifo"},{id:"papelera",img:null,modo:"papelera",es:"Papelera",en:"Recycle Bin",win:"papelera"}
 ];
 let posIconos=JSON.parse(localStorage.getItem("tidelabs_iconos2")||"null");
 function pintarIconos(){
@@ -548,14 +549,14 @@ function pintarIconos(){
     d.style.left=def.x+"px"; d.style.top=def.y+"px";
     d.innerHTML=(ic.img?`<img src="${ic.img}" alt="">`:(ic.modo==="mypc"||ic.modo==="papelera")?`<img src="${srcModo(ic.modo)}" alt="">`:ic.modo==="juegos"?(TEMA==="95"?`<img src="img/epoca/win95/juegos.png" alt="">`:pixSVG("juegos")):ic.svg?pixSVG(ic.svg):`<span class="pix">${ic.pix}</span>`)+(ic.badge?`<span class="descarga">${ic.badge}</span>`:"")+`<span>${LANG==="es"?ic.es:ic.en}</span>`;
     d.addEventListener("click",e=>{ $$(".icono").forEach(x=>x.classList.remove("sel")); d.classList.add("sel"); e.stopPropagation() });
-    d.addEventListener("dblclick",()=>abrirVentana(ic.win));
+    d.addEventListener("dblclick",()=>abrirIcono(ic));
     let sx,sy,ox,oy,mov=false;
     d.addEventListener("pointerdown",e=>{ sx=e.clientX;sy=e.clientY;ox=d.offsetLeft;oy=d.offsetTop;mov=false;
       const mv=ev=>{ const dx=ev.clientX-sx,dy=ev.clientY-sy; if(Math.abs(dx)+Math.abs(dy)>4)mov=true;
         d.style.left=Math.max(0,ox+dx)+"px"; d.style.top=Math.max(0,oy+dy)+"px" };
       const up=ev=>{ document.removeEventListener("pointermove",mv); document.removeEventListener("pointerup",up);
         if(mov){ posIconos=posIconos||{}; posIconos[ic.id]={x:d.offsetLeft,y:d.offsetTop}; localStorage.setItem("tidelabs_iconos2",JSON.stringify(posIconos)) }
-        else if(ev.pointerType==="touch"){ abrirVentana(ic.win) } };
+        else if(ev.pointerType==="touch"){ abrirIcono(ic) } };
       document.addEventListener("pointermove",mv); document.addEventListener("pointerup",up); });
     d.addEventListener("contextmenu",e=>{ e.preventDefault(); menuIcono(e.clientX,e.clientY,ic) });
     capa.appendChild(d);
@@ -622,6 +623,7 @@ function enfocar(id){
   Object.entries(VENTANAS).forEach(([k,v])=>v.el.classList.toggle("sin-foco",k!==id));
   $$("#tareas .tarea").forEach(b=>b.classList.toggle("activa",b.dataset.id===id));
 }
+function abrirIcono(ic){ if(ic.id==="baifo"){ bfInvocar(); return } abrirVentana(ic.win) }
 function abrirVentana(id){
   if(VENTANAS[id]){ const v=VENTANAS[id]; v.el.style.display="flex"; v.el.style.zIndex=++Z; enfocar(id); return }
   const def=DEFS[id];
@@ -1115,6 +1117,7 @@ const PROPS_ICONO={
   mypc:["Sistema","La casa por dentro: proyectos, cifras con su etiqueta y accesos directos."],
   inversores:["Documento","Inversores.txt: el resumen que un inversor puede leer sin salir del escritorio."],
   huella:["Proyecto de la casa","El juego de caminar Canarias. En desarrollo, probado en calle con rutas reales."],
+  baifo:["La mascota","La cabra de HUELLAGO viviendo en tu escritorio. Doble clic en su icono y aparece de la nada: cada vez de una manera distinta."],
   aliseo:["Proyecto · En vivo","Canciones personalizadas desde 25 €, con productores reales. Ya vende."],
   allincru:["Proyecto · En el taller","Laboratorio público de trading algorítmico: ni un número inventado."],
   msn:["Contacto","El colega verde: conversa y escribe al correo de la casa, de verdad."],
@@ -1228,7 +1231,7 @@ const BF_CTX={ huella:["¡HUELLA GO! Mi casa. Literalmente.","HUELLA GO! My home
   paint:["Pinta algo bonito. Un prado, por ejemplo.","Paint something nice. A meadow, maybe."],
   papelera:["No me tires a la papelera, que muerdo.","Don't bin me, I bite."],
   notas:["Apunta esto: las cabras mandan.","Write this down: goats rule."] };
-const bf={ x:300, pies:200, dir:1, vy:0, estado:"quieto", tEstado:2, tFrame:0, frame:0, corre:0, fotograma:"" };
+const bf={ x:300, pies:200, dir:1, vy:0, estado:"quieto", tEstado:2, tFrame:0, frame:0, corre:0, fotograma:"", presente:false, rot:0, escala:1, entrada:null, saludado:false };
 let bfEl=null, bfImg=null, bfBoc=null, bfZzz=null, bfUltimo=0, bfBocTimer=null, bfDown=null;
 function bfFrame(n){ if(bf.fotograma===n)return; bf.fotograma=n; if(bfImg)bfImg.src="img/baifo/"+n+".png" }
 function bfDecir(txt,ms){ if(!bfBoc)return; bfBoc.textContent=txt; bfBoc.classList.add("visible"); clearTimeout(bfBocTimer); bfBocTimer=setTimeout(()=>bfBoc.classList.remove("visible"),ms||3400) }
@@ -1240,8 +1243,28 @@ function bfSoportes(){
 }
 function bfApoyo(){ const s=bfSoportes().filter(s=>bf.x>s.x1&&bf.x<s.x2&&Math.abs(s.y-bf.pies)<3); return s.length?s[0]:null }
 function bfAterriza(win){
+  if(bf.entrada==="cielo"){ bf.entrada=null; bf.rot=0; bfEstrellas(); if(SFX.ganar)SFX.ganar();
+    bfDecir(bf.saludado?(LANG==="es"?"¡Aterrizaje de estrella!":"Star landing!"):(LANG==="es"?"¡Baaa! Soy BAIFO. Nadie me esperaba, ¿eh?":"Baaa! I'm BAIFO. Nobody expected me, right?"),3800); bf.saludado=true; return }
   if(win&&BF_CTX[win]&&Math.random()<.55){ const f=BF_CTX[win]; bfDecir(LANG==="es"?f[0]:f[1]) }
   else if(Math.random()<.10)bfDecir(bfFrase());
+}
+function bfEstrellas(){
+  if(!bfEl)return;
+  for(let i=0;i<9;i++){ const s=document.createElement("span"); s.className="bf-star"; s.textContent=i%3?"⭐":"✨"; bfEl.appendChild(s);
+    const ang=(i/9)*Math.PI*2+Math.random()*.5, dist=44+Math.random()*38;
+    s.animate([{transform:"translate(-50%,-50%) scale(.5)",opacity:1},{transform:`translate(${Math.cos(ang)*dist-8}px, ${Math.sin(ang)*dist-30}px) scale(1.15)`,opacity:0}],{duration:620+Math.random()*260,easing:"cubic-bezier(.2,.8,.3,1)"}).onfinish=()=>s.remove() }
+}
+function bfInvocar(v){
+  BAIFO_ON=true; localStorage.setItem("tidelabs_baifo","on");
+  if(bf.presente){ bfEstrellas(); if(SFX.baifo)SFX.baifo();
+    if(bfApoyo()&&bf.estado!=="cae"){ bf.vy=-430; bf.estado="cae" }
+    bfDecir(LANG==="es"?"¡Ya estoy, ya estoy! ¿Otra vez tú?":"I'm here, I'm here! You again?"); return }
+  bf.presente=true;
+  const variante=v!==undefined?v:Math.floor(Math.random()*3);
+  if(variante===0){ bf.x=innerWidth*(0.25+Math.random()*0.5); bf.pies=-170; bf.vy=0; bf.rot=0; bf.entrada="cielo"; bf.estado="cae"; bfDecir(LANG==="es"?"¡Allá vaaaa!":"Here I goooo!") }
+  else if(variante===1){ const izq=Math.random()<.5; bf.x=izq?-130:innerWidth+130; bf.dir=izq?1:-1; bf.pies=innerHeight-34; bf.corre=5; bf.estado="paseo"; bf.tEstado=7; if(SFX.baifo)SFX.baifo(); bfDecir(LANG==="es"?"¡Que ya llego, que ya llego!":"Coming, coming!") }
+  else { bf.x=innerWidth*(0.3+Math.random()*0.4); bf.pies=innerHeight-34; bf.escala=0; bf.estado="quieto"; bf.tEstado=3.2; bfEstrellas(); if(SFX.ganar)SFX.ganar();
+    bfDecir(bf.saludado?(LANG==="es"?"¡Puf! ¿A que no me has visto entrar?":"Poof! Bet you didn't see me come in."):(LANG==="es"?"¡Baaa! Soy BAIFO. Nadie me esperaba, ¿eh?":"Baaa! I'm BAIFO. Nobody expected me, right?"),3800); bf.saludado=true }
 }
 function bfDecide(){
   const r=Math.random();
@@ -1252,9 +1275,9 @@ function bfDecide(){
   else if(r<.87){ bf.vy=-430; bf.estado="cae"; if(Math.random()<.3)bfDecir(LANG==="es"?"¡Yuju!":"Wheee!") }
   else { bf.estado="duerme"; bf.tEstado=6+Math.random()*5 }
 }
-function bfDespierta(){ bf.x=innerWidth*(0.2+Math.random()*0.5); bf.pies=innerHeight-34; bf.estado="paseo"; bf.tEstado=5; bfDecir(LANG==="es"?"¡Baaa! Ya estoy aquí.":"Baaa! I'm here.") }
+function bfDespierta(){ bfInvocar() }
 function bfPinta(){
-  bfEl.style.transform=`translate(${bf.x-54}px, ${bf.pies-108}px)`;
+  bfEl.style.transform=`translate(${bf.x-54}px, ${bf.pies-108}px) rotate(${bf.rot}deg) scale(${bf.escala})`;
   bfEl.classList.toggle("mira-izq",bf.dir<0);
   bfZzz.classList.toggle("visible",bf.estado==="duerme");
 }
@@ -1262,9 +1285,11 @@ function bfTick(ts){
   requestAnimationFrame(bfTick); if(!bfEl)return;
   const dt=Math.min(.05,bfUltimo?(ts-bfUltimo)/1000:0); bfUltimo=ts;
   const desk=$("#desktop");
-  const visible=BAIFO_ON&&desk&&getComputedStyle(desk).display!=="none";
+  const visible=BAIFO_ON&&bf.presente&&desk&&getComputedStyle(desk).display!=="none";
   bfEl.hidden=!visible; if(!visible||bfDown)return;
   bf.tEstado-=dt;
+  if(bf.entrada==="cielo"&&bf.estado==="cae")bf.rot+=330*dt;
+  if(bf.escala<1)bf.escala=Math.min(1,bf.escala+dt*2.8);
   if(bf.estado!=="cae"&&!bfApoyo()){ bf.estado="cae"; bf.vy=0 }
   if(bf.estado==="cae"){
     const antes=bf.pies;
@@ -1278,7 +1303,7 @@ function bfTick(ts){
     bf.x+=bf.dir*(bf.corre>0?112:46)*dt;
     bf.tFrame-=dt;
     if(bf.tFrame<=0){ bf.tFrame=bf.corre>0?.11:.16; bf.frame=(bf.frame+1)%4; bfFrame("paseo-"+bf.frame) }
-    if(bf.x<42){ bf.x=42; bf.dir=1 } if(bf.x>innerWidth-42){ bf.x=innerWidth-42; bf.dir=-1 }
+    if(bf.corre<=0){ if(bf.x<42){ bf.x=42; bf.dir=1 } if(bf.x>innerWidth-42){ bf.x=innerWidth-42; bf.dir=-1 } }
     if(bf.tEstado<=0)bfDecide();
   } else {
     bfFrame(bf.estado==="pasta"?"pasta":bf.estado==="duerme"?"duerme":"quieto");
@@ -1290,7 +1315,7 @@ function baifoInit(){
   bfEl=$("#baifo"); if(!bfEl)return;
   bfImg=$("#baifo-img"); bfBoc=$("#baifo-bocadillo"); bfZzz=$("#baifo-zzz");
   ["paseo-0","paseo-1","paseo-2","paseo-3","quieto","pasta","duerme","cae"].forEach(n=>{ const i=new Image(); i.src="img/baifo/"+n+".png" });
-  bf.x=innerWidth*0.3; bf.pies=innerHeight-34; bf.estado="paseo"; bf.tEstado=6;
+  bf.x=innerWidth*0.3; bf.pies=innerHeight-34; bf.estado="quieto"; bf.presente=false;
   bfEl.addEventListener("pointerdown",e=>{ bfDown={x:e.clientX,y:e.clientY,t:Date.now(),max:0}; bfEl.setPointerCapture(e.pointerId); bfFrame("cae"); e.preventDefault() });
   bfEl.addEventListener("pointermove",e=>{ if(!bfDown)return; const d=Math.hypot(e.clientX-bfDown.x,e.clientY-bfDown.y); bfDown.max=Math.max(bfDown.max,d);
     if(bfDown.max>7){ bf.x=e.clientX; bf.pies=e.clientY+46; bfPinta() } });
@@ -1300,9 +1325,9 @@ function baifoInit(){
   bfEl.addEventListener("dblclick",()=>{ bf.corre=6; bfDecir(LANG==="es"?"¡A correr, que hay isla que iluminar!":"Run! There's an island to light up!") });
   bfEl.addEventListener("contextmenu",e=>{ e.preventDefault(); abrirCtx(e.clientX,e.clientY,[["bf-frase",t("Que diga algo","Say something")],["bf-explorer",t("Abrir HUELLAGO en el Explorer","Open HUELLAGO in the Explorer")],"hr",["baifo",t("Que se vaya a dormir","Send him to sleep")]]) });
   requestAnimationFrame(bfTick);
-  setTimeout(()=>{ if(BAIFO_ON)bfDecir(LANG==="es"?"¡Baaa! Soy BAIFO. Me paseo, pasta y opino.":"Baaa! I'm BAIFO. I roam, graze and have opinions.",4200) },6500);
 }
-ACCIONES.baifo=()=>{ BAIFO_ON=!BAIFO_ON; localStorage.setItem("tidelabs_baifo",BAIFO_ON?"on":"off"); if(BAIFO_ON)bfDespierta() };
+ACCIONES.baifo=()=>{ if(bf.presente){ bf.presente=false } else bfInvocar() };
+ACCIONES["abrir-baifo"]=()=>bfInvocar();
 ACCIONES["bf-frase"]=()=>{ bfDecir(bfFrase()); if(SFX.baifo)SFX.baifo() };
 ACCIONES["bf-explorer"]=()=>abrirVentana("ie");
 if(window.SFX)SFX.baifo=()=>{ nota(545,.13,"sawtooth",.09,0,350); nota(505,.17,"sawtooth",.09,.11,295); nota(770,.06,"square",.04,.02) };
