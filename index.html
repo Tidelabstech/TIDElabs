@@ -7,6 +7,9 @@
 <meta name="description" content="TIDElabs — Si lo has soñado, podemos crearlo. Casa creativa de Canarias: HUELLA GO, Aliseo.studio y ALLINCRU. Entra: esto no se lee, se usa.">
 <link rel="canonical" href="https://tidelabstech.github.io/TIDElabs/">
 <link rel="icon" type="image/png" href="favicon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0A1E3C">
+<link rel="apple-touch-icon" href="img/icon-192.png">
 <style>
 :root{
   --azul-xp:#245EDB; --azul-xp2:#3C8DFF; --verde-inicio1:#3E9B4F; --verde-inicio2:#2C7A38;
@@ -566,6 +569,7 @@ function abrirVentana(id){
   if(id==="solitario")solNueva();
   if(id==="msn")msnInit();
   if(id==="paint")paintInit();
+  if(id==="desk")deskInit();
   if(innerWidth<760)el.classList.add("max");
 }
 function cerrarVentana(id){ const v=VENTANAS[id]; if(!v)return; v.el.remove(); delete VENTANAS[id];
@@ -698,7 +702,8 @@ msn(){ return `<div class="msn-cab"><img src="img/msn.jpg" alt=""><div><b>TIDEla
 desk(){ return `<h3>TIDElabs Desk <span style="color:var(--oro)">.exe</span></h3>
 <p>${t("El escritorio que estás usando, como programa de Windows: se instala, vive en tu barra de tareas y se abre con la probeta. Mismo código que la web, sin navegador de por medio.","The desktop you are using, as a Windows program: it installs, lives on your taskbar and opens with the test-tube mark. Same code as the web, no browser in between.")}</p>
 <div class="desk-sello"><img src="img/probeta.jpg" alt=""><div><b>TIDElabs Desk</b><br><small>${t("Windows 10/11 · Instalador firmado por la casa · Actualizaciones del HUB","Windows 10/11 · Installer signed by the house · HUB updates")}</small></div></div>
-<p>${t("Llega con la publicación oficial del HUB. Esta es la maqueta navegable: todo lo que ves aquí dentro es lo que llevará el programa.","It arrives with the official HUB launch. This is the browsable mock-up: everything you see in here is what the program will carry.")}</p>` },
+<p><button class="boton-xp" id="desk-instalar" style="font-weight:700;padding:8px 18px">⬇ ${t("Instalar TIDElabs Desk","Install TIDElabs Desk")}</button></p>
+<p id="desk-ayuda" style="font-size:12.5px;opacity:.85">${t("Si tu navegador lo permite, el botón instala la app al momento. Si no: menú del navegador → «Instalar aplicación» (en iPhone: Compartir → «Añadir a pantalla de inicio»). Queda con su icono, su ventana y funciona sin conexión.","If your browser allows it, the button installs the app right away. Otherwise: browser menu → “Install app” (on iPhone: Share → “Add to Home Screen”). It gets its icon, its own window, and works offline.")}</p>` },
 paint(){ return `<div class="paint-wrap">
   <div class="paint-tools" role="toolbar" aria-label="Herramientas">
     ${[["lapiz","✏️","Lápiz"],["pincel","🖌️","Pincel"],["spray","💨","Spray"],["goma","🧽","Goma"],["linea","╱","Línea"],["rect","▭","Rectángulo"],["elipse","◯","Elipse"]].map(h=>`<button data-tool="${h[0]}" title="${h[2]}" class="${h[0]==="lapiz"?"act":""}">${h[1]}</button>`).join("")}
@@ -922,6 +927,22 @@ function paintInit(){
   $("#paint-nuevo").onclick=()=>{ cx.fillStyle="#FFF"; cx.fillRect(0,0,cv.width,cv.height); guarda(); SFX.cerrar() };
   $("#paint-guardar").onclick=()=>{ const a=document.createElement("a"); a.download="mi-obra-tidelabs.png"; a.href=cv.toDataURL("image/png"); a.click(); SFX.ganar() };
 }
+/* ---------- Desk instalable (PWA) ---------- */
+let PROMPT_INSTALACION=null;
+window.addEventListener("beforeinstallprompt",e=>{ e.preventDefault(); PROMPT_INSTALACION=e; deskInit() });
+window.addEventListener("appinstalled",()=>{ PROMPT_INSTALACION=null; SFX.ganar(); deskInit() });
+function deskInit(){
+  const b=$("#desk-instalar"); if(!b)return;
+  const ayuda=$("#desk-ayuda");
+  if(matchMedia("(display-mode: standalone)").matches){ b.disabled=true; b.textContent="✓ "+t("Ya lo tienes instalado","Already installed"); if(ayuda)ayuda.textContent=t("Estás usando TIDElabs Desk como aplicación. La probeta vive en tu escritorio.","You are using TIDElabs Desk as an app. The test tube lives on your desktop."); return }
+  b.disabled=false;
+  b.onclick=async()=>{ if(PROMPT_INSTALACION){ PROMPT_INSTALACION.prompt(); const r=await PROMPT_INSTALACION.userChoice; if(r.outcome==="accepted"){ SFX.ganar() } PROMPT_INSTALACION=null; deskInit() }
+    else{ SFX.error(); if(ayuda)ayuda.textContent=t("Este navegador no ofrece la instalación automática: usa su menú → «Instalar aplicación» o «Añadir a pantalla de inicio».","This browser does not offer automatic install: use its menu → “Install app” or “Add to Home Screen”.") } };
+}
+if("serviceWorker" in navigator && (location.protocol==="https:" || location.hostname==="localhost")){
+  fetch("sw.js",{method:"HEAD"}).then(r=>{ if(r.ok)navigator.serviceWorker.register("sw.js").catch(()=>{}) }).catch(()=>{});
+}
+
 /* ---------- arranque ---------- */
 aplicarTema();
 if(matchMedia("(prefers-reduced-motion: reduce)").matches){ mostrar("#welcome") } else { encender() }
