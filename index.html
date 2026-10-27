@@ -548,7 +548,7 @@ function pintarIconos(){
     const def=posIconos&&posIconos[ic.id]?posIconos[ic.id]:{x:14+Math.floor(i/5)*116,y:12+(i%5)*118};
     d.style.left=def.x+"px"; d.style.top=def.y+"px";
     d.innerHTML=(ic.img?`<img src="${ic.img}" alt="">`:(ic.modo==="mypc"||ic.modo==="papelera")?`<img src="${srcModo(ic.modo)}" alt="">`:ic.modo==="juegos"?(TEMA==="95"?`<img src="img/epoca/win95/juegos.png" alt="">`:pixSVG("juegos")):ic.svg?pixSVG(ic.svg):`<span class="pix">${ic.pix}</span>`)+(ic.badge?`<span class="descarga">${ic.badge}</span>`:"")+`<span>${LANG==="es"?ic.es:ic.en}</span>`;
-    d.addEventListener("click",e=>{ $$(".icono").forEach(x=>x.classList.remove("sel")); d.classList.add("sel"); e.stopPropagation() });
+    d.addEventListener("click",e=>{ $$(".icono").forEach(x=>x.classList.remove("sel")); d.classList.add("sel"); if(ic.id==="baifo"&&!bf.presente)abrirIcono(ic); e.stopPropagation() });
     d.addEventListener("dblclick",()=>abrirIcono(ic));
     let sx,sy,ox,oy,mov=false;
     d.addEventListener("pointerdown",e=>{ sx=e.clientX;sy=e.clientY;ox=d.offsetLeft;oy=d.offsetTop;mov=false;
@@ -1237,7 +1237,7 @@ function bfFrame(n){ if(bf.fotograma===n)return; bf.fotograma=n; if(bfImg)bfImg.
 function bfDecir(txt,ms){ if(!bfBoc)return; bfBoc.textContent=txt; bfBoc.classList.add("visible"); clearTimeout(bfBocTimer); bfBocTimer=setTimeout(()=>bfBoc.classList.remove("visible"),ms||3400) }
 function bfFrase(){ const f=BF_F[Math.floor(Math.random()*BF_F.length)]; return LANG==="es"?f[0]:f[1] }
 function bfSoportes(){
-  const lista=[{y:innerHeight-34,x1:-80,x2:innerWidth+80,win:null}];
+  const lista=[{y:innerHeight-34,x1:-700,x2:innerWidth+700,win:null}];
   Object.entries(VENTANAS).forEach(([id,v])=>{ const r=v.el.getBoundingClientRect(); if(r.width>40&&r.height>40)lista.push({y:r.top,x1:r.left+10,x2:r.right-10,win:id}) });
   return lista;
 }
@@ -1288,6 +1288,7 @@ function bfTick(ts){
   const visible=BAIFO_ON&&bf.presente&&desk&&getComputedStyle(desk).display!=="none";
   bfEl.hidden=!visible; if(!visible||bfDown)return;
   bf.tEstado-=dt;
+  if(bf.presente&&bf.estado!=="cae"&&(bf.x<-180||bf.x>innerWidth+180)){ bf.presente=false; bfInvocar(2); return }
   if(bf.entrada==="cielo"&&bf.estado==="cae")bf.rot+=330*dt;
   if(bf.escala<1)bf.escala=Math.min(1,bf.escala+dt*2.8);
   if(bf.estado!=="cae"&&!bfApoyo()){ bf.estado="cae"; bf.vy=0 }
