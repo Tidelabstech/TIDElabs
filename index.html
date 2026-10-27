@@ -1350,11 +1350,13 @@ const P2_ENC={
  "her-mini":[["her",["Mini… ¡carrera hasta la papelera! ¡Ya!","Mini… race you to the bin! Go!"]],["mini",["¡vale! …¿por qué estoy boca abajo?","okay! …why am I upside down?"]]]};
 const P2_CFG={
  hermanita:{carpeta:"hermanita",caja:96,vel:54,corre:136,duermeP:.07,sigue:false,tropieza:0,frases:HER_F,invertida:true,cuadros:[0,1,2,3]},
- mini:{carpeta:"mini",caja:76,vel:36,corre:98,duermeP:.23,sigue:true,tropieza:.0038,frases:MINI_F,invertida:true,cuadros:[0,1,2,1],iconos:true}};
+ mini:{carpeta:"mini",caja:76,vel:36,corre:98,duermeP:.23,sigue:true,tropieza:.0026,frases:MINI_F,invertida:true,cuadros:[0,1,2,1],iconos:true}};
 const W={}; const p2Cool={};
 function p2Nuevo(id){ return {id:id,cfg:P2_CFG[id],x:innerWidth*.5,pies:innerHeight-34,dir:1,vy:0,estado:"quieto",tEstado:2,tFrame:0,frame:0,corre:0,fotograma:"",presente:false,rot:0,escala:1,ultimo:0,solo:0,rodando:0,tropiezaLuego:false,saltaLuego:false,vx:0,drag:null,modoIconos:0,bocTimer:null,el:null,img:null,boc:null,zzz:null} }
 function p2Frame(w,n){ if(w.fotograma===n)return; w.fotograma=n; if(w.img)w.img.src="img/"+w.cfg.carpeta+"/"+n+".png" }
-function p2Decir(w,txt,ms){ if(!w.boc)return; w.boc.textContent=txt; w.boc.classList.add("visible"); clearTimeout(w.bocTimer); w.bocTimer=setTimeout(()=>w.boc.classList.remove("visible"),ms||3200) }
+function p2Decir(w,txt,ms){ if(!w.boc)return; w.boc.textContent=txt;
+  w.boc.style.transform=w.x<150?"translateX(-14%) scale(.8)":w.x>innerWidth-150?"translateX(-86%) scale(.8)":"translateX(-50%) scale(.8)";
+  w.boc.classList.add("visible"); requestAnimationFrame(()=>{ if(w.boc.classList.contains("visible"))w.boc.style.transform=w.x<150?"translateX(-14%) scale(1)":w.x>innerWidth-150?"translateX(-86%) scale(1)":"translateX(-50%) scale(1)" }); clearTimeout(w.bocTimer); w.bocTimer=setTimeout(()=>w.boc.classList.remove("visible"),ms||3200) }
 function p2Frase(w){ const f=w.cfg.frases[Math.floor(Math.random()*w.cfg.frases.length)]; return LANG==="es"?f[0]:f[1] }
 function p2Bleat(w){ if(!window.SFX)return; if(w.id==="hermanita"&&SFX.her)SFX.her(); else if(w.id==="mini"&&SFX.mini)SFX.mini(); else if(SFX.baifo)SFX.baifo() }
 function p2Estrellas(x,y,emojis){
@@ -1377,7 +1379,7 @@ function p2Invocar(w,v){
     return }
   w.presente=true;
   const variante=v!==undefined?v:Math.floor(Math.random()*2);
-  if(variante===0){ const izq=Math.random()<.5; w.x=izq?-110:innerWidth+110; w.dir=izq?1:-1; w.pies=innerHeight-34; w.corre=6; w.estado="paseo"; w.tEstado=8;
+  if(variante===0){ const izq=Math.random()<.5; w.x=izq?-w.cfg.caja:innerWidth+w.cfg.caja; w.dir=izq?1:-1; w.pies=innerHeight-34; w.corre=6; w.estado="paseo"; w.tEstado=8;
     if(w.id==="mini"){ w.rodando=1.15; w.estado="cae" }
     p2Bleat(w); p2Decir(w,w.id==="mini"?(LANG==="es"?"¡allá vooooy!":"here I coooome!"):(LANG==="es"?"¡Ya llego! ¡Saltando, claro!":"Coming! Hopping, of course!")) }
   else { w.x=innerWidth*(0.25+Math.random()*0.5); w.pies=innerHeight-34; w.escala=0; w.estado="quieto"; w.tEstado=3;
@@ -1433,7 +1435,7 @@ function p2Tick(ts){
     if(w.drag){ w.el.hidden=false; w.ultimo=ts; return }
     w.el.hidden=!visible; if(!visible)return;
     w.tEstado-=dt;
-    if(w.estado!=="cae"&&w.x<-160||w.x>innerWidth+160){ if(w.estado!=="cae"){ w.presente=false; p2Invocar(w,1); return } }
+    if(w.estado!=="cae"&&(w.x<-140||w.x>innerWidth+140)){ w.presente=false; p2Invocar(w,1); return }
     if(w.escala<1)w.escala=Math.min(1,w.escala+dt*2.8);
     if(w.rodando>0){ w.rodando-=dt; w.x+=w.dir*118*dt; w.rot+=330*dt; p2Frame(w,"cae");
       if(w.rodando<=0){ w.rot=0; w.estado="quieto"; w.tEstado=1.4; p2Estrellas(w.x,w.pies-40,["⭐","✨"]); }
@@ -1455,7 +1457,7 @@ function p2Tick(ts){
       w.tFrame-=dt;
       if(w.tFrame<=0){ w.tFrame=w.corre>0?.11:.17; w.frame=(w.frame+1)%w.cfg.cuadros.length; p2Frame(w,"paseo-"+w.cfg.cuadros[w.frame]) }
       if(w.corre<=0){ if(w.x<40){ w.x=40; w.dir=1 } if(w.x>innerWidth-40){ w.x=innerWidth-40; w.dir=-1 } }
-      if(w.id==="hermanita"&&apoyo&&Math.random()<dt*.45){ w.vy=-300; w.estado="cae" }
+      if(w.id==="hermanita"&&apoyo&&Math.random()<dt*.28){ w.vy=-300; w.estado="cae" }
       if(w.id==="mini"&&apoyo&&Math.random()<w.cfg.tropieza){ w.estado="tropiezo"; w.tEstado=.75; if(Math.random()<.4)p2Decir(w,LANG==="es"?"¡no ha pasado nada!":"nothing happened!") }
       if(w.tEstado<=0)p2Decide(w);
     } else {
@@ -1484,6 +1486,13 @@ function p2Tick(ts){
       if(w.id==="mini"){ const ad=p2AdultoCerca(w); if(!ad){ w.solo+=dt; if(w.solo>20&&w.estado!=="duerme"){ w.solo=8; p2Decir(w,LANG==="es"?"¡baaa! ¿dónde estáis?":"baaa! where are you?"); p2Bleat(w) } } else w.solo=0 }
       if(w.tEstado<=0&&w.estado!=="cae")p2Decide(w);
     }
+    // limites de la casa: dentro de los margenes, siempre (media caja por cada lado)
+    const entrando=w.corre>0&&((w.x<innerWidth/2&&w.dir>0)||(w.x>=innerWidth/2&&w.dir<0));
+    const mx=w.cfg.caja/2;
+    if(!entrando&&w.x<mx){ w.x=mx; if(w.vx<0)w.vx=0; if(w.estado==="paseo"&&w.dir<0)w.dir=1 }
+    if(!entrando&&w.x>innerWidth-mx){ w.x=innerWidth-mx; if(w.vx>0)w.vx=0; if(w.estado==="paseo"&&w.dir>0)w.dir=-1 }
+    if(w.pies>innerHeight-34){ w.pies=innerHeight-34; if(w.estado==="cae"){ w.vy=0; w.vx=0; w.estado="quieto"; w.tEstado=1.2 } }
+    if(w.pies<w.cfg.caja){ w.pies=w.cfg.caja; if(w.vy<0)w.vy=0 }
     p2Pinta(w);
   });
   p2Espacio();
