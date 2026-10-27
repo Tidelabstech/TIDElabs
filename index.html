@@ -263,6 +263,17 @@ body.win95 .pass95{display:flex;align-items:center;gap:8px;margin-top:12px;font-
 body.win95 .icono .pix.svg svg{width:40px;height:40px;filter:saturate(.72) contrast(1.05) drop-shadow(1px 1px 0 rgba(0,0,0,.35))}
 .juego-svg{width:52px;height:52px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#FFF,#D8D2BC);border:1px solid #8A8574;border-radius:9px}
 .juego-svg svg{width:42px;height:42px}
+/* ===== BAIFO, la mascota del escritorio ===== */
+#baifo{position:fixed;left:0;top:0;width:108px;height:108px;z-index:590;will-change:transform;cursor:url("img/cursores/xp/hand.png") 4 0,pointer}
+body.win95 #baifo{cursor:url("img/cursores/win95/hand.png") 10 10,pointer}
+#baifo-img{width:100%;height:100%;object-fit:contain;object-position:bottom center;display:block;pointer-events:none}
+#baifo.mira-izq #baifo-img{transform:scaleX(-1)}
+#baifo-bocadillo{position:absolute;bottom:96%;left:50%;transform:translateX(-50%) scale(.8);width:max-content;max-width:230px;background:#FFF;color:#222;font-family:Tahoma,sans-serif;font-size:12.5px;line-height:1.35;padding:7px 11px;border:2px solid #333;border-radius:12px;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+#baifo-bocadillo.visible{opacity:1;transform:translateX(-50%) scale(1)}
+#baifo-bocadillo::after{content:"";position:absolute;top:100%;left:50%;margin-left:-6px;border:6px solid transparent;border-top:8px solid #333}
+#baifo-zzz{position:absolute;top:-8px;right:2px;font-size:19px;opacity:0;pointer-events:none}
+#baifo-zzz.visible{opacity:1;animation:bfzzz 1.6s ease-in-out infinite}
+@keyframes bfzzz{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-7px) rotate(8deg)}}
 /* ===== PROPIEDADES + SALVAPANTALLAS ===== */
 .props-tabs{display:flex;gap:3px;border-bottom:2px solid #ACA899;margin-bottom:12px;flex-wrap:wrap}
 .props-tab{font-family:Tahoma,sans-serif;font-size:.83rem;padding:6px 13px;border:1px solid #ACA899;border-bottom:none;border-radius:7px 7px 0 0;background:#E4E1D5;cursor:pointer}
@@ -448,7 +459,7 @@ function aplicarIdioma(){
   document.documentElement.lang=LANG;
   $$("[data-i18n]").forEach(el=>{const k=el.dataset.i18n; if(I[LANG][k]) el.innerHTML=I[LANG][k];});
   $("#tray-idioma").textContent=LANG.toUpperCase();
-  pintarIconos(); pintarMenus(); reloj(); fondoInit(); aplicarCursor(); salvaInit();
+  pintarIconos(); pintarMenus(); reloj(); fondoInit(); aplicarCursor(); salvaInit(); baifoInit();
 }
 function t(es,en){return LANG==="es"?es:en}
 
@@ -710,7 +721,7 @@ function abrirCtx(x,y,items){
 function cerrarCtx(){ CTX.classList.remove("abierto") }
 document.addEventListener("click",e=>{ if(!e.target.closest("#ctx"))cerrarCtx() });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ cerrarCtx(); cerrarMenu() } });
-function menuEscritorio(x,y){ abrirCtx(x,y,[["organizar",t("Organizar iconos","Auto arrange icons")],["tema",TEMA==="xp"?t("Reiniciar como Windows 95","Restart as Windows 95"):t("Reiniciar como Windows XP","Restart as Windows XP")],"hr",["juegos",t("Abrir Juegos","Open Games")],["sonido",SONIDO?t("Silenciar","Mute"):t("Activar sonido","Unmute")],"hr",["props",t("Propiedades","Properties")]]) }
+function menuEscritorio(x,y){ abrirCtx(x,y,[["organizar",t("Organizar iconos","Auto arrange icons")],["tema",TEMA==="xp"?t("Reiniciar como Windows 95","Restart as Windows 95"):t("Reiniciar como Windows XP","Restart as Windows XP")],"hr",["juegos",t("Abrir Juegos","Open Games")],["sonido",SONIDO?t("Silenciar","Mute"):t("Activar sonido","Unmute")],"hr",["props",t("Propiedades","Properties")],["baifo",t("🐐 BAIFO viene / se va","🐐 BAIFO comes / goes")]]) }
 function menuIcono(x,y,ic){ abrirCtx(x,y,[["abrir-"+ic.win,t("Abrir","Open")],"hr",["organizar",t("Organizar iconos","Auto arrange icons")],["prop-"+ic.id,t("Propiedades","Properties")]]) }
 function menuTitulo(x,y,id){ abrirCtx(x,y,[["min-"+id,t("Minimizar","Minimise")],["max-"+id,t("Maximizar / Restaurar","Maximise / Restore")],"hr",["x-"+id,t("Cerrar","Close")]]) }
 const ACCIONES={
@@ -1132,6 +1143,7 @@ CONTENIDOS.props=()=>{
     <select id="salva-tipo"><option value="estrellas" ${SALVA_TIPO==="estrellas"?"selected":""}>${t("Estrellas voladoras","Flying stars")}</option><option value="probeta" ${SALVA_TIPO==="probeta"?"selected":""}>${t("La probeta rebotando","The bouncing flask")}</option><option value="ninguno" ${SALVA_TIPO==="ninguno"?"selected":""}>${t("Ninguno","None")}</option></select></label>
     <label><span style="flex:1"><b>${t("Esperar","Wait")}</b><small>${t("Minutos sin tocar nada","Idle minutes")}</small></span>
     <select id="salva-min">${[1,3,5,0].map(m=>`<option value="${m}" ${SALVA_MIN===m?"selected":""}>${m===0?t("Nunca","Never"):m+" min"}</option>`).join("")}</select></label>
+    <label><span style="flex:1"><b>BAIFO</b><small>${t("La cabra se pasea por el escritorio, como la ovejita de antes","The goat roams the desktop, like the little sheep of old")}</small></span><input type="checkbox" id="props-baifo" ${BAIFO_ON?"checked":""}></label>
     <button class="boton-xp" id="salva-ver" style="align-self:flex-start">${t("Vista previa","Preview")}</button></div>`;
   else cuerpo=`<table class="prop-tabla">
     <tr><td>${t("Equipo","Machine")}</td><td>TIDElabs Desk — ${t("el escritorio de la casa","the house desktop")}</td></tr>
@@ -1156,6 +1168,7 @@ function propsInit(){
   if(st)st.onchange=()=>{ SALVA_TIPO=st.value; localStorage.setItem("tidelabs_salva",SALVA_TIPO); salvaRearmar() };
   if(sm)sm.onchange=()=>{ SALVA_MIN=+sm.value; localStorage.setItem("tidelabs_salva_min",String(SALVA_MIN)); salvaRearmar() };
   if(sv)sv.onclick=()=>{ cerrarVentana("props"); setTimeout(salvaStart,350) };
+  const pb=$("#props-baifo"); if(pb)pb.onchange=()=>{ BAIFO_ON=pb.checked; localStorage.setItem("tidelabs_baifo",BAIFO_ON?"on":"off"); if(BAIFO_ON)bfDespierta() };
 }
 ACCIONES.props=()=>abrirVentana("props");
 ICONOS.forEach(ic=>{ ACCIONES["abrir-"+ic.win]=()=>abrirVentana(ic.win); ACCIONES["prop-"+ic.id]=()=>abrirPropIcono(ic) });
@@ -1192,6 +1205,107 @@ function ieInit(){
   $("#ie-detener").onclick=()=>{ try{ fr.contentWindow.stop() }catch(_){ } th.classList.remove("girando"); est.textContent=t("Detenido. Como los módems de antes, pero sin el ruido.","Stopped.") };
   $("#ie-fuera").onclick=()=>window.open(IE_HOME,"_blank");
 }
+
+/* ---------- BAIFO, la mascota del escritorio ---------- */
+let BAIFO_ON=localStorage.getItem("tidelabs_baifo")!=="off";
+const BF_F=[[ "¡Baaa! A iluminar la isla, paso a paso.","Baaa! Lighting up the island, step by step."],
+["Ilumina tu isla. Yo ya llevo la mía encendida.","Light up your island. Mine is already glowing."],
+["¿Salimos a avivar unas rutas?","Shall we go brighten some routes?"],
+["Un baifo no se cansa: descubre, pasta y sigue.","A baifo never tires: discover, graze, keep going."],
+["Si una zona se apaga, se vuelve a caminar. Así es la luz.","If a place goes dark, you walk it again. That's light."],
+["¡Eh! Casi me pisas la bandana.","Hey! Mind the bandana."],
+["Hoy he descubierto tres esquinas nuevas del escritorio.","I discovered three new desktop corners today."],
+["Las cabras no conquistamos: iluminamos.","Goats don't conquer: we light things up."],
+["Ese Teide de fondo… lo subí. Dos veces.","That Teide wallpaper… climbed it. Twice."],
+["¿Has oído la radio? Suena a himno.","Heard the radio? It sounds like an anthem."]];
+const BF_CTX={ huella:["¡HUELLA GO! Mi casa. Literalmente.","HUELLA GO! My home. Literally."],
+  aliseo:["Aquí huele a canción recién hecha.","Smells like a freshly made song in here."],
+  allincru:["ALLINCRU: ni un número inventado, palabra de cabra.","ALLINCRU: not one invented number, goat's honour."],
+  ie:["Navegando como en 2001. Me encanta.","Browsing like it's 2001. Love it."],
+  msn:["El colega verde siempre contesta.","The green buddy always replies."],
+  deck:["Diapositivas… yo prefiero los pastos, pero vale.","Slides… I prefer pastures, but fine."],
+  radio:["Ese himno me lo sé de memoria.","I know that anthem by heart."],
+  paint:["Pinta algo bonito. Un prado, por ejemplo.","Paint something nice. A meadow, maybe."],
+  papelera:["No me tires a la papelera, que muerdo.","Don't bin me, I bite."],
+  notas:["Apunta esto: las cabras mandan.","Write this down: goats rule."] };
+const bf={ x:300, pies:200, dir:1, vy:0, estado:"quieto", tEstado:2, tFrame:0, frame:0, corre:0, fotograma:"" };
+let bfEl=null, bfImg=null, bfBoc=null, bfZzz=null, bfUltimo=0, bfBocTimer=null, bfDown=null;
+function bfFrame(n){ if(bf.fotograma===n)return; bf.fotograma=n; if(bfImg)bfImg.src="img/baifo/"+n+".png" }
+function bfDecir(txt,ms){ if(!bfBoc)return; bfBoc.textContent=txt; bfBoc.classList.add("visible"); clearTimeout(bfBocTimer); bfBocTimer=setTimeout(()=>bfBoc.classList.remove("visible"),ms||3400) }
+function bfFrase(){ const f=BF_F[Math.floor(Math.random()*BF_F.length)]; return LANG==="es"?f[0]:f[1] }
+function bfSoportes(){
+  const lista=[{y:innerHeight-34,x1:-80,x2:innerWidth+80,win:null}];
+  Object.entries(VENTANAS).forEach(([id,v])=>{ const r=v.el.getBoundingClientRect(); if(r.width>40&&r.height>40)lista.push({y:r.top,x1:r.left+10,x2:r.right-10,win:id}) });
+  return lista;
+}
+function bfApoyo(){ const s=bfSoportes().filter(s=>bf.x>s.x1&&bf.x<s.x2&&Math.abs(s.y-bf.pies)<3); return s.length?s[0]:null }
+function bfAterriza(win){
+  if(win&&BF_CTX[win]&&Math.random()<.55){ const f=BF_CTX[win]; bfDecir(LANG==="es"?f[0]:f[1]) }
+  else if(Math.random()<.10)bfDecir(bfFrase());
+}
+function bfDecide(){
+  const r=Math.random();
+  if(bf.estado==="duerme"){ bf.estado="paseo"; bf.tEstado=4+Math.random()*5; return }
+  if(r<.42){ bf.estado="paseo"; if(Math.random()<.3)bf.dir*=-1; bf.tEstado=4+Math.random()*6 }
+  else if(r<.60){ bf.estado="quieto"; bf.tEstado=2+Math.random()*2.5 }
+  else if(r<.76){ bf.estado="pasta"; bf.tEstado=3+Math.random()*2.5 }
+  else if(r<.87){ bf.vy=-430; bf.estado="cae"; if(Math.random()<.3)bfDecir(LANG==="es"?"¡Yuju!":"Wheee!") }
+  else { bf.estado="duerme"; bf.tEstado=6+Math.random()*5 }
+}
+function bfDespierta(){ bf.x=innerWidth*(0.2+Math.random()*0.5); bf.pies=innerHeight-34; bf.estado="paseo"; bf.tEstado=5; bfDecir(LANG==="es"?"¡Baaa! Ya estoy aquí.":"Baaa! I'm here.") }
+function bfPinta(){
+  bfEl.style.transform=`translate(${bf.x-54}px, ${bf.pies-108}px)`;
+  bfEl.classList.toggle("mira-izq",bf.dir<0);
+  bfZzz.classList.toggle("visible",bf.estado==="duerme");
+}
+function bfTick(ts){
+  requestAnimationFrame(bfTick); if(!bfEl)return;
+  const dt=Math.min(.05,bfUltimo?(ts-bfUltimo)/1000:0); bfUltimo=ts;
+  const desk=$("#desktop");
+  const visible=BAIFO_ON&&desk&&getComputedStyle(desk).display!=="none";
+  bfEl.hidden=!visible; if(!visible||bfDown)return;
+  bf.tEstado-=dt;
+  if(bf.estado!=="cae"&&!bfApoyo()){ bf.estado="cae"; bf.vy=0 }
+  if(bf.estado==="cae"){
+    const antes=bf.pies;
+    bf.vy+=1500*dt; bf.pies+=bf.vy*dt;
+    const cruza=bfSoportes().filter(s=>bf.x>s.x1&&bf.x<s.x2&&s.y>=antes-1&&s.y<=bf.pies);
+    if(cruza.length&&bf.vy>0){ const s=cruza.reduce((a,b)=>a.y<b.y?a:b); bf.pies=s.y; bf.vy=0; bf.estado="quieto"; bf.tEstado=1.2+Math.random()*1.6; bfAterriza(s.win) }
+    if(bf.pies>innerHeight-34){ bf.pies=innerHeight-34; bf.vy=0; bf.estado="quieto"; bf.tEstado=1.5 }
+    bfFrame("cae");
+  } else if(bf.estado==="paseo"){
+    bf.corre=Math.max(0,bf.corre-dt);
+    bf.x+=bf.dir*(bf.corre>0?112:46)*dt;
+    bf.tFrame-=dt;
+    if(bf.tFrame<=0){ bf.tFrame=bf.corre>0?.11:.16; bf.frame=(bf.frame+1)%4; bfFrame("paseo-"+bf.frame) }
+    if(bf.x<42){ bf.x=42; bf.dir=1 } if(bf.x>innerWidth-42){ bf.x=innerWidth-42; bf.dir=-1 }
+    if(bf.tEstado<=0)bfDecide();
+  } else {
+    bfFrame(bf.estado==="pasta"?"pasta":bf.estado==="duerme"?"duerme":"quieto");
+    if(bf.tEstado<=0)bfDecide();
+  }
+  bfPinta();
+}
+function baifoInit(){
+  bfEl=$("#baifo"); if(!bfEl)return;
+  bfImg=$("#baifo-img"); bfBoc=$("#baifo-bocadillo"); bfZzz=$("#baifo-zzz");
+  ["paseo-0","paseo-1","paseo-2","paseo-3","quieto","pasta","duerme","cae"].forEach(n=>{ const i=new Image(); i.src="img/baifo/"+n+".png" });
+  bf.x=innerWidth*0.3; bf.pies=innerHeight-34; bf.estado="paseo"; bf.tEstado=6;
+  bfEl.addEventListener("pointerdown",e=>{ bfDown={x:e.clientX,y:e.clientY,t:Date.now(),max:0}; bfEl.setPointerCapture(e.pointerId); bfFrame("cae"); e.preventDefault() });
+  bfEl.addEventListener("pointermove",e=>{ if(!bfDown)return; const d=Math.hypot(e.clientX-bfDown.x,e.clientY-bfDown.y); bfDown.max=Math.max(bfDown.max,d);
+    if(bfDown.max>7){ bf.x=e.clientX; bf.pies=e.clientY+46; bfPinta() } });
+  bfEl.addEventListener("pointerup",e=>{ if(!bfDown)return; const fueClick=bfDown.max<7&&(Date.now()-bfDown.t)<500; bfDown=null;
+    if(fueClick){ bfDecir(bfFrase()); if(SFX.baifo)SFX.baifo(); if(bfApoyo()){ bf.vy=-400; bf.estado="cae" } }
+    else { bf.vy=0; bf.estado="cae" } });
+  bfEl.addEventListener("dblclick",()=>{ bf.corre=6; bfDecir(LANG==="es"?"¡A correr, que hay isla que iluminar!":"Run! There's an island to light up!") });
+  bfEl.addEventListener("contextmenu",e=>{ e.preventDefault(); abrirCtx(e.clientX,e.clientY,[["bf-frase",t("Que diga algo","Say something")],["bf-explorer",t("Abrir HUELLAGO en el Explorer","Open HUELLAGO in the Explorer")],"hr",["baifo",t("Que se vaya a dormir","Send him to sleep")]]) });
+  requestAnimationFrame(bfTick);
+  setTimeout(()=>{ if(BAIFO_ON)bfDecir(LANG==="es"?"¡Baaa! Soy BAIFO. Me paseo, pasta y opino.":"Baaa! I'm BAIFO. I roam, graze and have opinions.",4200) },6500);
+}
+ACCIONES.baifo=()=>{ BAIFO_ON=!BAIFO_ON; localStorage.setItem("tidelabs_baifo",BAIFO_ON?"on":"off"); if(BAIFO_ON)bfDespierta() };
+ACCIONES["bf-frase"]=()=>{ bfDecir(bfFrase()); if(SFX.baifo)SFX.baifo() };
+ACCIONES["bf-explorer"]=()=>abrirVentana("ie");
+if(window.SFX)SFX.baifo=()=>{ nota(545,.13,"sawtooth",.09,0,350); nota(505,.17,"sawtooth",.09,.11,295); nota(770,.06,"square",.04,.02) };
 /* ---------- RADIO de la casa ---------- */
 function radioInit(){
   const au=$("#radio-audio"), btn=$("#radio-play"), prog=$("#radio-prog"), barra=prog?prog.querySelector("i"):null, tiempo=$("#radio-tiempo");
@@ -1238,6 +1352,7 @@ if("serviceWorker" in navigator && (location.protocol==="https:" || location.hos
 aplicarTema();
 if(matchMedia("(prefers-reduced-motion: reduce)").matches){ mostrar("#welcome") } else { encender() }
 </script>
+<div id="baifo" hidden><div id="baifo-bocadillo"></div><img id="baifo-img" src="img/baifo/quieto.png" alt="BAIFO, la cabra de la casa"><div id="baifo-zzz">💤</div></div>
 <div id="salva" aria-hidden="true"><canvas id="salva-canvas"></canvas><img id="salva-probeta" src="img/probeta.jpg" alt="" hidden></div>
 </body>
 </html>
