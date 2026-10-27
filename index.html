@@ -1349,10 +1349,10 @@ const P2_ENC={
  "mini-bf":[["mini",["¡ba-ba-BAIFOOO!","ba-ba-BAIFOOO!"]],["bf",["Despacio, campeón, que te conozco.","Easy, champ. I know you."]]],
  "her-mini":[["her",["Mini… ¡carrera hasta la papelera! ¡Ya!","Mini… race you to the bin! Go!"]],["mini",["¡vale! …¿por qué estoy boca abajo?","okay! …why am I upside down?"]]]};
 const P2_CFG={
- hermanita:{carpeta:"hermanita",caja:96,vel:54,corre:136,duermeP:.07,sigue:false,tropieza:0,frases:HER_F},
- mini:{carpeta:"mini",caja:66,vel:36,corre:98,duermeP:.23,sigue:true,tropieza:.0038,frases:MINI_F}};
+ hermanita:{carpeta:"hermanita",caja:96,vel:54,corre:136,duermeP:.07,sigue:false,tropieza:0,frases:HER_F,invertida:true,cuadros:[0,1,2,3]},
+ mini:{carpeta:"mini",caja:76,vel:36,corre:98,duermeP:.23,sigue:true,tropieza:.0038,frases:MINI_F,invertida:true,cuadros:[0,1,2,1],iconos:true}};
 const W={}; const p2Cool={};
-function p2Nuevo(id){ return {id:id,cfg:P2_CFG[id],x:innerWidth*.5,pies:innerHeight-34,dir:1,vy:0,estado:"quieto",tEstado:2,tFrame:0,frame:0,corre:0,fotograma:"",presente:false,rot:0,escala:1,ultimo:0,solo:0,rodando:0,tropiezaLuego:false,saltaLuego:false,bocTimer:null,el:null,img:null,boc:null,zzz:null} }
+function p2Nuevo(id){ return {id:id,cfg:P2_CFG[id],x:innerWidth*.5,pies:innerHeight-34,dir:1,vy:0,estado:"quieto",tEstado:2,tFrame:0,frame:0,corre:0,fotograma:"",presente:false,rot:0,escala:1,ultimo:0,solo:0,rodando:0,tropiezaLuego:false,saltaLuego:false,vx:0,drag:null,modoIconos:0,bocTimer:null,el:null,img:null,boc:null,zzz:null} }
 function p2Frame(w,n){ if(w.fotograma===n)return; w.fotograma=n; if(w.img)w.img.src="img/"+w.cfg.carpeta+"/"+n+".png" }
 function p2Decir(w,txt,ms){ if(!w.boc)return; w.boc.textContent=txt; w.boc.classList.add("visible"); clearTimeout(w.bocTimer); w.bocTimer=setTimeout(()=>w.boc.classList.remove("visible"),ms||3200) }
 function p2Frase(w){ const f=w.cfg.frases[Math.floor(Math.random()*w.cfg.frases.length)]; return LANG==="es"?f[0]:f[1] }
@@ -1373,7 +1373,7 @@ function p2Invocar(w,v){
   BAIFO_ON=true; localStorage.setItem("tidelabs_baifo","on");
   if(w.presente){ p2Decir(w,p2Frase(w)); p2Bleat(w);
     if(w.id==="mini"&&Math.random()<.4){ w.estado="tropiezo"; w.tEstado=.75 }
-    else if(bfApoyo.call(null)||true){ w.vy=-380; w.estado="cae" }
+    else { const ap=bfSoportes().filter(s=>w.x>s.x1&&w.x<s.x2&&Math.abs(s.y-w.pies)<3)[0]; if(ap){ w.vy=-380; w.estado="cae" } }
     return }
   w.presente=true;
   const variante=v!==undefined?v:Math.floor(Math.random()*2);
@@ -1387,6 +1387,8 @@ function p2Invocar(w,v){
 function p2Decide(w){
   if(w.estado==="encuentro"){ if(w.tropiezaLuego){ w.tropiezaLuego=false; w.estado="tropiezo"; w.tEstado=.75; return } if(w.saltaLuego){ w.saltaLuego=false; w.vy=-400; w.estado="cae"; return } }
   if(w.estado==="duerme"){ w.estado="paseo"; w.tEstado=4+Math.random()*4; return }
+  if(w.cfg.iconos&&w.modoIconos>0){ w.estado="quieto"; w.tEstado=.6; return }
+  if(w.cfg.iconos&&w.modoIconos<=0&&Math.abs(w.pies-(innerHeight-34))<3&&Math.random()<.3){ w.modoIconos=15; w.estado="quieto"; w.tEstado=.4; if(Math.random()<.5)p2Decir(w,LANG==="es"?"¡a saltar por los iconos!":"icon hopping time!"); return }
   const adulto=w.cfg.sigue?p2AdultoCerca(w):null;
   if(adulto&&Math.abs(adulto.x-w.x)>240){ w.estado="paseo"; w.dir=adulto.x>w.x?1:-1; w.tEstado=3.5; if(Math.random()<.35)p2Decir(w,LANG==="es"?"¡esperadmeeee!":"waaait for meee!"); return }
   const r=Math.random(), d=w.cfg.duermeP;
@@ -1398,7 +1400,7 @@ function p2Decide(w){
 }
 function p2Pinta(w){
   w.el.style.transform="translate("+(w.x-w.cfg.caja/2)+"px, "+(w.pies-w.cfg.caja)+"px) rotate("+w.rot+"deg) scale("+w.escala+")";
-  w.el.classList.toggle("mira-izq",w.dir<0);
+  w.el.classList.toggle("mira-izq",w.cfg.invertida?(w.dir>0):(w.dir<0));
   w.zzz.classList.toggle("visible",w.estado==="duerme");
 }
 function p2Cosita(w,otro,clave){
@@ -1415,6 +1417,11 @@ function p2Cosita(w,otro,clave){
   if(clave.indexOf("mini")>=0&&W.mini&&W.mini.presente)W.mini.tropiezaLuego=true;
   if(clave.indexOf("her")>=0&&W.hermanita&&W.hermanita.presente)W.hermanita.saltaLuego=true;
 }
+function p2Espacio(){
+  ["hermanita","mini"].forEach(id=>{ const w=W[id]; if(!w||!w.presente||w.drag||w.estado==="cae"||w.estado==="encuentro"||w.estado==="tropiezo"||w.estado==="duerme")return;
+    const otros=[]; if(bf.presente)otros.push({x:bf.x,pies:bf.pies}); ["hermanita","mini"].forEach(o=>{ if(o!==id&&W[o]&&W[o].presente)otros.push({x:W[o].x,pies:W[o].pies}) });
+    otros.forEach(e=>{ if(Math.abs(e.pies-w.pies)<20&&Math.abs(e.x-w.x)<46){ w.dir=w.x<e.x?-1:1; w.estado="paseo"; w.tEstado=Math.max(w.tEstado,.7) } }) });
+}
 function p2Tick(ts){
   requestAnimationFrame(p2Tick);
   const desk=$("#desktop"); if(!desk)return;
@@ -1423,6 +1430,7 @@ function p2Tick(ts){
     const w=W[id]; if(!w||!w.el)return;
     const dt=Math.min(.05,w.ultimo?(ts-w.ultimo)/1000:0); w.ultimo=ts;
     const visible=BAIFO_ON&&w.presente&&deskVisible;
+    if(w.drag){ w.el.hidden=false; w.ultimo=ts; return }
     w.el.hidden=!visible; if(!visible)return;
     w.tEstado-=dt;
     if(w.estado!=="cae"&&w.x<-160||w.x>innerWidth+160){ if(w.estado!=="cae"){ w.presente=false; p2Invocar(w,1); return } }
@@ -1432,30 +1440,34 @@ function p2Tick(ts){
       p2Pinta(w); return }
     if(w.estado==="tropiezo"){ w.rot=Math.min(360,w.rot+480*dt); p2Frame(w,"cae"); if(w.tEstado<=0){ w.rot=0; w.estado="quieto"; w.tEstado=1.2 } p2Pinta(w); return }
     const apoyos=bfSoportes();
+    if(w.cfg.iconos&&w.modoIconos>0){ w.modoIconos-=dt; $$(".icono").forEach(ic=>{ const r=ic.getBoundingClientRect(); if(r.width>30)apoyos.push({y:r.top,x1:r.left+4,x2:r.right-4,win:"icono"}) }) }
     const apoyo=apoyos.filter(s=>w.x>s.x1&&w.x<s.x2&&Math.abs(s.y-w.pies)<3)[0];
     if(w.estado!=="cae"&&!apoyo){ w.estado="cae"; w.vy=0 }
     if(w.estado==="cae"){
-      const antes=w.pies; w.vy+=1500*dt; w.pies+=w.vy*dt;
+      const antes=w.pies; w.vy+=1500*dt; w.pies+=w.vy*dt; if(w.vx)w.x+=w.vx*dt;
       const cruza=apoyos.filter(s=>w.x>s.x1&&w.x<s.x2&&s.y>=antes-1&&s.y<=w.pies);
-      if(cruza.length&&w.vy>0){ const s=cruza.reduce((a,b)=>a.y<b.y?a:b); w.pies=s.y; w.vy=0; w.estado="quieto"; w.tEstado=1.1+Math.random()*1.4 }
+      if(cruza.length&&w.vy>0){ const s=cruza.reduce((a,b)=>a.y<b.y?a:b); w.pies=s.y; w.vy=0; w.vx=0; w.estado="quieto"; w.tEstado=s.win==="icono"?1.7+Math.random()*1.3:1.1+Math.random()*1.4; if(s.win==="icono"&&Math.random()<.4)p2Decir(w,LANG==="es"?"¡estoy en un icono! ¡ilumino desde aquí!":"I am on an icon! lighting up from up here!") }
       if(w.pies>innerHeight-34){ w.pies=innerHeight-34; w.vy=0; w.estado="quieto"; w.tEstado=1.4 }
       p2Frame(w,"cae");
     } else if(w.estado==="paseo"){
       w.corre=Math.max(0,w.corre-dt);
       w.x+=w.dir*(w.corre>0?w.cfg.corre:w.cfg.vel)*dt;
       w.tFrame-=dt;
-      if(w.tFrame<=0){ w.tFrame=w.corre>0?.11:.17; w.frame=(w.frame+1)%4; p2Frame(w,"paseo-"+w.frame) }
+      if(w.tFrame<=0){ w.tFrame=w.corre>0?.11:.17; w.frame=(w.frame+1)%w.cfg.cuadros.length; p2Frame(w,"paseo-"+w.cfg.cuadros[w.frame]) }
       if(w.corre<=0){ if(w.x<40){ w.x=40; w.dir=1 } if(w.x>innerWidth-40){ w.x=innerWidth-40; w.dir=-1 } }
       if(w.id==="hermanita"&&apoyo&&Math.random()<dt*.45){ w.vy=-300; w.estado="cae" }
       if(w.id==="mini"&&apoyo&&Math.random()<w.cfg.tropieza){ w.estado="tropiezo"; w.tEstado=.75; if(Math.random()<.4)p2Decir(w,LANG==="es"?"¡no ha pasado nada!":"nothing happened!") }
       if(w.tEstado<=0)p2Decide(w);
     } else {
       p2Frame(w,w.estado==="pasta"?"pasta":w.estado==="duerme"?"duerme":"quieto");
+      if(w.cfg.iconos&&w.modoIconos>0&&apoyo&&w.tEstado<=0){ const ics=$$(".icono").map(ic=>{ const r=ic.getBoundingClientRect(); return {cx:r.left+r.width/2,top:r.top} }).filter(o=>o.top<w.pies-14||Math.abs(o.cx-w.x)>50);
+        if(ics.length){ ics.sort((a,b)=>Math.abs(a.cx-w.x)-Math.abs(b.cx-w.x)); const t=ics[0]; w.dir=t.cx>w.x?1:-1; const distY=Math.max(30,(w.pies-t.top)+44); const vy=-Math.sqrt(2*1500*distY); const tv=2*Math.abs(vy)/1500; w.vx=Math.max(-340,Math.min(340,(t.cx-w.x)/tv)); w.vy=vy; w.estado="cae" } }
       if(w.id==="mini"){ const ad=p2AdultoCerca(w); if(!ad){ w.solo+=dt; if(w.solo>20&&w.estado!=="duerme"){ w.solo=8; p2Decir(w,LANG==="es"?"¡baaa! ¿dónde estáis?":"baaa! where are you?"); p2Bleat(w) } } else w.solo=0 }
-      if(w.tEstado<=0)p2Decide(w);
+      if(w.tEstado<=0&&w.estado!=="cae")p2Decide(w);
     }
     p2Pinta(w);
   });
+  p2Espacio();
   // encuentros: las cositas
   const her=W.hermanita, mini=W.mini;
   if(her&&her.presente&&bf.presente&&her.estado!=="cae"&&bf.estado!=="cae"&&Math.abs(her.pies-bf.pies)<26&&Math.abs(her.x-bf.x)<76)p2Cosita(her,{esBf:true,x:bf.x},"her-bf");
@@ -1474,9 +1486,13 @@ function p2Init(){
     w.el=el; w.img=el.querySelector("img"); w.boc=el.querySelector(".p2-boc"); w.zzz=el.querySelector(".p2-zzz");
     w.img.src="img/"+w.cfg.carpeta+"/quieto.png";
     ["paseo-0","paseo-1","paseo-2","paseo-3","quieto","pasta","duerme","cae"].forEach(n=>{ const i=new Image(); i.src="img/"+w.cfg.carpeta+"/"+n+".png" });
-    el.addEventListener("click",()=>{ p2Decir(w,p2Frase(w)); p2Bleat(w);
-      if(w.id==="mini"&&Math.random()<.45){ w.estado="tropiezo"; w.tEstado=.75 }
-      else { w.vy=-360; w.estado="cae" } });
+    el.addEventListener("pointerdown",e=>{ w.drag={x:e.clientX,y:e.clientY,t:Date.now(),max:0}; el.setPointerCapture(e.pointerId); p2Frame(w,"cae"); e.preventDefault() });
+    el.addEventListener("pointermove",e=>{ if(!w.drag)return; const d=Math.hypot(e.clientX-w.drag.x,e.clientY-w.drag.y); w.drag.max=Math.max(w.drag.max,d);
+      if(w.drag.max>7){ w.x=e.clientX; w.pies=e.clientY+w.cfg.caja*.43; w.vx=0; w.rot=0; p2Pinta(w) } });
+    el.addEventListener("pointerup",()=>{ if(!w.drag)return; const fueClick=w.drag.max<7&&(Date.now()-w.drag.t)<500; w.drag=null;
+      if(fueClick){ p2Decir(w,p2Frase(w)); p2Bleat(w);
+        if(w.id==="mini"&&Math.random()<.45){ w.estado="tropiezo"; w.tEstado=.75 } else { w.vy=-360; w.estado="cae" } }
+      else { w.vy=0; w.estado="cae" } });
   });
   requestAnimationFrame(p2Tick);
 }
