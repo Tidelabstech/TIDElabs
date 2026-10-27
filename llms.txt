@@ -1,0 +1,17 @@
+# TIDElabs
+
+> TIDElabs — Si lo has soñado, podemos crearlo. Casa creativa de Canarias (España).
+> Su web es un sistema operativo retro interactivo (XP/95) con juegos, sonido y una ventana de contacto estilo MSN.
+
+## La casa
+- Marca: la probeta de mareas (laboratorio que mide el mar). Usuario de sesión del OS: «Invitado».
+- Lema: «Si lo has soñado, podemos crearlo.»
+
+## Proyectos
+- HUELLA GO — el juego que convierte caminar en jugar; Canarias como tablero, BAIFO la cabra de copiloto. Estado: en desarrollo. https://huella-go.app
+- Aliseo.studio — canciones personalizadas supervisadas por productores reales. Estado: en vivo. https://tidelabstech.github.io/Aliseo/
+- ALLINCRU · LEYENDAS — laboratorio público de trading algorítmico (EAs de MT5 sobre XAUUSD). Estado: en el taller. https://allincru.com
+
+## Contacto
+- Por la ventana MSN del propio escritorio de la web (abre el correo del visitante dirigido al estudio).
+- La entidad legal se constituye con la inyección de capital de los inversores.
