@@ -1403,6 +1403,7 @@ function p2Decide(w){
   if(w.cfg.iconos&&w.modoIconos<=0&&Math.abs(w.pies-(innerHeight-34))<3&&Math.random()<.3){ w.modoIconos=45; w.estado="quieto"; w.tEstado=.4; if(Math.random()<.5)p2Decir(w,LANG==="es"?"¡a saltar por los iconos!":"icon hopping time!"); return }
   const adulto=w.cfg.sigue?p2AdultoCerca(w):null;
   if(adulto&&Math.abs(adulto.x-w.x)>240){ w.estado="paseo"; w.dir=adulto.x>w.x?1:-1; w.tEstado=3.5; if(Math.random()<.35)p2Decir(w,LANG==="es"?"¡esperadmeeee!":"waaait for meee!"); return }
+  if(adulto&&Math.abs(adulto.x-w.x)<110&&w.estado==="paseo"){ w.estado="quieto"; w.tEstado=1.8; return }
   const r=Math.random(), d=w.cfg.duermeP;
   if(r<.38){ w.estado="paseo"; if(Math.random()<.3)w.dir*=-1; w.tEstado=4+Math.random()*5 }
   else if(r<.58){ w.estado="quieto"; w.tEstado=2+Math.random()*2.4 }
@@ -1431,8 +1432,20 @@ function p2Cosita(w,otro,clave){
 }
 function p2Espacio(){
   ["hermanita","mini"].forEach(id=>{ const w=W[id]; if(!w||!w.presente||w.drag||w.estado==="cae"||w.estado==="encuentro"||w.estado==="tropiezo"||w.estado==="duerme")return;
+    if(performance.now()<(w.escHasta||0))return;   // huida ya comprometida: no recalcular
     const otros=[]; if(bf.presente)otros.push({x:bf.x,pies:bf.pies}); ["hermanita","mini"].forEach(o=>{ if(o!==id&&W[o]&&W[o].presente)otros.push({x:W[o].x,pies:W[o].pies}) });
-    otros.forEach(e=>{ if(Math.abs(e.pies-w.pies)<20&&Math.abs(e.x-w.x)<46){ w.dir=w.x<e.x?-1:1; w.estado="paseo"; w.tEstado=Math.max(w.tEstado,.7) } }) });
+    let izq=null,der=null;
+    otros.forEach(e=>{ if(Math.abs(e.pies-w.pies)<20){ const dx=e.x-w.x; if(Math.abs(dx)<52){ if(dx<0)izq=e; else der=e } } });
+    if(!izq&&!der)return;
+    if(izq&&der){ w.vy=-430; w.estado="cae"; w.escHasta=performance.now()+1500; if(Math.random()<.5)p2Decir(w,LANG==="es"?"¡eh, eh, espacio!":"hey, hey, space!"); return }
+    w.dir=izq?1:-1; w.estado="paseo"; w.tEstado=1.15; w.escHasta=performance.now()+1600;
+  });
+}
+function p2Repulsion(w,dt){
+  if(w.drag||w.estado==="cae"||w.estado==="encuentro")return;
+  const otros=[]; if(bf.presente)otros.push({x:bf.x,pies:bf.pies}); ["hermanita","mini"].forEach(o=>{ if(o!==w.id&&W[o]&&W[o].presente)otros.push({x:W[o].x,pies:W[o].pies}) });
+  otros.forEach(e=>{ if(Math.abs(e.pies-w.pies)<20){ const dx=w.x-e.x, ad=Math.abs(dx);
+    if(ad>0.01&&ad<44)w.x+=Math.sign(dx)*Math.min(1.1,(44-ad)*Math.min(1,dt*5)*.6) } });
 }
 function p2Tick(ts){
   requestAnimationFrame(p2Tick);
@@ -1496,6 +1509,7 @@ function p2Tick(ts){
       if(w.id==="mini"){ const ad=p2AdultoCerca(w); if(!ad){ w.solo+=dt; if(w.solo>20&&w.estado!=="duerme"){ w.solo=8; p2Decir(w,LANG==="es"?"¡baaa! ¿dónde estáis?":"baaa! where are you?"); p2Bleat(w) } } else w.solo=0 }
       if(w.tEstado<=0&&w.estado!=="cae")p2Decide(w);
     }
+    p2Repulsion(w,dt);
     // limites de la casa: dentro de los margenes, siempre (media caja por cada lado)
     const entrando=w.corre>0&&((w.x<innerWidth/2&&w.dir>0)||(w.x>=innerWidth/2&&w.dir<0));
     const mx=w.cfg.caja/2;
