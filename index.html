@@ -1047,6 +1047,10 @@ function paintInit(){
 const FONDOS={
   bliss:{es:"Bliss atlántico",en:"Atlantic Bliss",bg:'url("fondo-bliss-web.jpg") center/cover no-repeat'},
   atardecer:{es:"Atardecer canario",en:"Canarian sunset",bg:'url("fondo-atardecer-web.jpg") center/cover no-repeat'},
+  teide:{es:"El Teide",en:"Mount Teide",bg:'url("fondo-teide-web.jpg") center/cover no-repeat'},
+  dunas:{es:"Dunas de Maspalomas",en:"Maspalomas Dunes",bg:'url("fondo-dunas-web.jpg") center/cover no-repeat'},
+  timanfaya:{es:"Timanfaya",en:"Timanfaya",bg:'url("fondo-timanfaya-web.jpg") center/cover no-repeat'},
+  gigantes:{es:"Los Gigantes",en:"Los Gigantes cliffs",bg:'url("fondo-gigantes-web.jpg") center/cover no-repeat'},
   medianoche:{es:"Medianoche de la casa",en:"House midnight",bg:"radial-gradient(1000px 620px at 50% 18%,#12305C,#010612)"},
   mareas:{es:"Mareas",en:"Tides",bg:"linear-gradient(160deg,#0B3B4D,#0A6E6E 55%,#0D1F1C)"},
   teal:{es:"Verde azulado del 95",en:"95 teal",bg:"#008080"}
@@ -1121,7 +1125,7 @@ CONTENIDOS.props=()=>{
   const tabs=[["fondo",t("Fondo","Wallpaper")],["cursor","Cursor"],["pantalla",t("Protector","Screensaver")],["sistema",t("La casa","The House")]];
   let cuerpo="";
   if(propsTab==="fondo") cuerpo=`<div class="fondo-grid">${Object.entries(FONDOS).map(([k,f])=>`<button class="fondo-card ${FONDO===k?"on":""}" data-fondo="${k}"><span class="fondo-thumb" style="background:${f.bg}"></span>${LANG==="es"?f.es:f.en}</button>`).join("")}</div>
-  <p style="font-size:12px;color:#666;margin-top:10px">${t("Tu fondo se guarda en este equipo y sobrevive al reinicio entre XP y 95.","Your wallpaper is saved on this machine and survives the XP/95 reboot.")}</p>`;
+  <p style="font-size:12px;color:#666;margin-top:10px">${t("Tu fondo se guarda en este equipo y sobrevive al reinicio entre XP y 95.","Your wallpaper is saved on this machine and survives the XP/95 reboot.")}</p><p style="font-size:11.5px;color:#999;margin-top:4px">${t("Paisajes reales de Canarias · Wikimedia Commons — autores y licencias en FONDOS-FUENTE.txt del repo.","Real Canarian landscapes · Wikimedia Commons — authors and licenses in the repo's FONDOS-FUENTE.txt.")}</p>`;
   else if(propsTab==="cursor") cuerpo=`<div class="cur-lista">${[["auto",t("Automático (el del modo)","Automatic (follows the mode)"),t("XP en XP, 95 en 95","XP on XP, 95 on 95")],["xp","Windows XP",t("El set auténtico de XP, dominio público","The authentic XP set, public domain")],["95","Windows 95",t("La flecha afilada y la mano clásica del 95","The sharp arrow and classic hand of 95")],["trans",t("Transparente 2007","2007 Transparent"),t("El set translúcido de rw-designer (CC-BY)","The translucent rw-designer set (CC-BY)")],["sistema",t("El de tu sistema","Your system's own"),t("Sin disfraz: el cursor de siempre","No disguise: your everyday cursor")]].map(o=>`<label><input type="radio" name="cur" value="${o[0]}" ${CURSOR===o[0]?"checked":""}><span><b>${o[1]}</b><small>${o[2]}</small></span></label>`).join("")}</div>`;
   else if(propsTab==="pantalla") cuerpo=`<div class="cur-lista">
     <label><span style="flex:1"><b>${t("Protector","Saver")}</b><small>${t("Como el de las estrellas de entonces","Like the flying stars of old")}</small></span>
