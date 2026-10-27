@@ -263,6 +263,24 @@ body.win95 .pass95{display:flex;align-items:center;gap:8px;margin-top:12px;font-
 body.win95 .icono .pix.svg svg{width:40px;height:40px;filter:saturate(.72) contrast(1.05) drop-shadow(1px 1px 0 rgba(0,0,0,.35))}
 .juego-svg{width:52px;height:52px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#FFF,#D8D2BC);border:1px solid #8A8574;border-radius:9px}
 .juego-svg svg{width:42px;height:42px}
+/* ===== PROPIEDADES + SALVAPANTALLAS ===== */
+.props-tabs{display:flex;gap:3px;border-bottom:2px solid #ACA899;margin-bottom:12px;flex-wrap:wrap}
+.props-tab{font-family:Tahoma,sans-serif;font-size:.83rem;padding:6px 13px;border:1px solid #ACA899;border-bottom:none;border-radius:7px 7px 0 0;background:#E4E1D5;cursor:pointer}
+.props-tab.on{background:#FFF;font-weight:700;box-shadow:0 -2px 0 #D9A441 inset}
+.fondo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px}
+.fondo-card{font-family:Tahoma,sans-serif;font-size:.78rem;background:#FFF;border:2px solid #C9C3A8;border-radius:8px;padding:6px;cursor:pointer;text-align:center;color:#333}
+.fondo-card.on{border-color:#D9A441;box-shadow:0 0 0 2px rgba(217,164,65,.35)}
+.fondo-thumb{display:block;height:56px;border-radius:5px;margin-bottom:5px;border:1px solid rgba(0,0,0,.18)}
+.cur-lista{display:flex;flex-direction:column;gap:8px;font-family:Tahoma,sans-serif;font-size:.88rem}
+.cur-lista label{display:flex;gap:9px;align-items:flex-start;background:#FFF;border:1px solid #D8D2BC;border-radius:8px;padding:9px 11px;cursor:pointer}
+.cur-lista small{display:block;color:#777}
+.prop-tabla{width:100%;border-collapse:collapse;font-family:Tahoma,sans-serif;font-size:.9rem}
+.prop-tabla td{padding:7px 9px;border-bottom:1px solid #E3DEC9;vertical-align:top}
+.prop-tabla td:first-child{font-weight:700;width:96px;color:#555}
+#salva{position:fixed;inset:0;background:#000;z-index:600;display:none}
+#salva.activo{display:block}
+#salva canvas{width:100%;height:100%;display:block}
+#salva-probeta{position:absolute;width:112px;height:112px;border-radius:14px;box-shadow:0 0 46px rgba(217,164,65,.55)}
 /* ===== DECK / RADIO / NOTAS ===== */
 .deck-frame{width:100%;height:540px;border:1px solid #C9C3A8;border-radius:4px;background:#010612}
 .radio-caja{background:linear-gradient(160deg,#0D1F1C,#123128);color:#F7F1E5;border-radius:10px;padding:16px}
@@ -291,13 +309,31 @@ body.win95 .icono .pix.svg svg{width:40px;height:40px;filter:saturate(.72) contr
 .paint-actual{width:30px;height:30px;border:2px inset #FFF;flex:none}
 .paint-color{width:17px;height:17px;border:1px solid #666;cursor:pointer;padding:0}
 .paint-acciones{display:flex;gap:6px;margin-left:auto}
-/* ===== CURSORES DE ÉPOCA (set Windows Transparent, CC-BY) ===== */
-body,.win .cuerpo{cursor:url("img/cursores/normal.png") 0 0,auto}
-.icono,.tarea,.mi,.enlace,a,.msn-rapidas button,.radio-temas button,.paint-color,.carta,.sol-hueco,.minas-cara{cursor:url("img/cursores/hand.png") 11 4,pointer}
-input,textarea,.notas-area{cursor:url("img/cursores/text.png") 19 15,text}
-.win .titlebar:active{cursor:url("img/cursores/move.png") 11 11,move}
-#boot,#boot95{cursor:url("img/cursores/wait.png") 2 2,wait}
-button:disabled{cursor:url("img/cursores/no.png") 16 15,not-allowed}
+/* ===== CURSORES: el modo manda; el esquema de Propiedades, más ===== */
+body,.win .cuerpo{cursor:url("img/cursores/xp/normal.png") 0 0,auto}
+body.win95,body.win95 .win .cuerpo{cursor:url("img/cursores/win95/normal.png") 0 0,auto}
+.icono,.tarea,.mi,.enlace,a,.msn-rapidas button,.radio-temas button,.paint-color,.carta,.sol-hueco,.minas-cara{cursor:url("img/cursores/xp/hand.png") 4 0,pointer}
+body.win95 .icono,body.win95 .tarea,body.win95 .mi,body.win95 .enlace,body.win95 a,body.win95 .msn-rapidas button,body.win95 .radio-temas button,body.win95 .paint-color,body.win95 .carta,body.win95 .sol-hueco,body.win95 .minas-cara{cursor:url("img/cursores/win95/hand.png") 10 10,pointer}
+input,textarea,.notas-area{cursor:url("img/cursores/xp/text.png") 4 9,text}
+body.win95 input,body.win95 textarea,body.win95 .notas-area{cursor:url("img/cursores/win95/text.png") 10 10,text}
+.win .titlebar:active{cursor:url("img/cursores/xp/move.png") 10 10,move}
+body.win95 .win .titlebar:active{cursor:url("img/cursores/win95/move.png") 10 10,move}
+#boot{cursor:url("img/cursores/xp/wait.png") 0 13,wait}
+#boot95{cursor:url("img/cursores/win95/wait.png") 10 10,wait}
+button:disabled{cursor:url("img/cursores/xp/no.png") 9 9,not-allowed}
+body.win95 button:disabled{cursor:url("img/cursores/win95/no.png") 10 10,not-allowed}
+body.cur-xp,body.cur-xp .win .cuerpo{cursor:url("img/cursores/xp/normal.png") 0 0,auto}
+body.cur-xp .icono,body.cur-xp .tarea,body.cur-xp .mi,body.cur-xp .enlace,body.cur-xp a,body.cur-xp .msn-rapidas button,body.cur-xp .radio-temas button,body.cur-xp .paint-color,body.cur-xp .carta,body.cur-xp .sol-hueco,body.cur-xp .minas-cara{cursor:url("img/cursores/xp/hand.png") 4 0,pointer}
+body.cur-xp input,body.cur-xp textarea,body.cur-xp .notas-area{cursor:url("img/cursores/xp/text.png") 4 9,text}
+body.cur-95,body.cur-95 .win .cuerpo{cursor:url("img/cursores/win95/normal.png") 0 0,auto}
+body.cur-95 .icono,body.cur-95 .tarea,body.cur-95 .mi,body.cur-95 .enlace,body.cur-95 a,body.cur-95 .msn-rapidas button,body.cur-95 .radio-temas button,body.cur-95 .paint-color,body.cur-95 .carta,body.cur-95 .sol-hueco,body.cur-95 .minas-cara{cursor:url("img/cursores/win95/hand.png") 10 10,pointer}
+body.cur-95 input,body.cur-95 textarea,body.cur-95 .notas-area{cursor:url("img/cursores/win95/text.png") 10 10,text}
+body.cur-trans,body.cur-trans .win .cuerpo{cursor:url("img/cursores/trans/normal.png") 0 0,auto}
+body.cur-trans .icono,body.cur-trans .tarea,body.cur-trans .mi,body.cur-trans .enlace,body.cur-trans a,body.cur-trans .msn-rapidas button,body.cur-trans .radio-temas button,body.cur-trans .paint-color,body.cur-trans .carta,body.cur-trans .sol-hueco,body.cur-trans .minas-cara{cursor:url("img/cursores/trans/hand.png") 11 4,pointer}
+body.cur-trans input,body.cur-trans textarea,body.cur-trans .notas-area{cursor:url("img/cursores/trans/text.png") 19 15,text}
+body.cur-sistema,body.cur-sistema .win .cuerpo,body.cur-sistema .win .titlebar:active{cursor:auto}
+body.cur-sistema .icono,body.cur-sistema .tarea,body.cur-sistema .mi,body.cur-sistema .enlace,body.cur-sistema a,body.cur-sistema .msn-rapidas button,body.cur-sistema .radio-temas button,body.cur-sistema .paint-color,body.cur-sistema .carta,body.cur-sistema .sol-hueco,body.cur-sistema .minas-cara{cursor:pointer}
+body.cur-sistema input,body.cur-sistema textarea,body.cur-sistema .notas-area{cursor:text}
 </style>
 </head>
 <body>
@@ -395,7 +431,7 @@ function aplicarIdioma(){
   document.documentElement.lang=LANG;
   $$("[data-i18n]").forEach(el=>{const k=el.dataset.i18n; if(I[LANG][k]) el.innerHTML=I[LANG][k];});
   $("#tray-idioma").textContent=LANG.toUpperCase();
-  pintarIconos(); pintarMenus(); reloj();
+  pintarIconos(); pintarMenus(); reloj(); fondoInit(); aplicarCursor(); salvaInit();
 }
 function t(es,en){return LANG==="es"?es:en}
 
@@ -438,7 +474,7 @@ const SFX={
 /* ---------- flujo de pantallas ---------- */
 const pantallas=["#boot","#boot95","#welcome","#desktop","#off"];
 function mostrar(sel){ pantallas.forEach(p=>$(p).classList.remove("activa")); if(sel)$(sel).classList.add("activa") }
-function aplicarTema(){ document.body.classList.toggle("win95",TEMA==="95"); $("#tray-sonido").textContent=SONIDO?"🔊":"🔇" }
+function aplicarTema(){ document.body.classList.toggle("win95",TEMA==="95"); $("#tray-sonido").textContent=SONIDO?"🔊":"🔇"; if($("#iconos")){ pintarIconos(); pintarMenus(); } }
 let bootTimer=null;
 function encender(){
   if(TEMA==="95"){ mostrar("#boot95"); clearTimeout(bootTimer); bootTimer=setTimeout(()=>mostrar("#welcome"),2600); }
@@ -458,20 +494,22 @@ $("#off").addEventListener("click",encender);
 function reiniciarCon(tema){
   TEMA=tema; localStorage.setItem("tidelabs_tema",tema);
   Object.keys(VENTANAS).forEach(cerrarVentana); cerrarMenu();
-  aplicarTema(); encender();
+  aplicarTema(); fondoDeTema(); encender();
 }
 
 /* ---------- iconos del escritorio ---------- */
+const IMG_MODO={ mypc:{xp:"img/epoca/xp/mypc.png",w95:"img/epoca/win95/mypc.png"}, papelera:{xp:"img/epoca/xp/papelera.png",w95:"img/epoca/win95/papelera.png"}, llena:{xp:"img/epoca/xp/papelera-llena.png",w95:"img/epoca/win95/papelera-llena.png"} };
+const srcModo=k=>IMG_MODO[k][TEMA==="95"?"w95":"xp"];
 const ICONOS=[
- {id:"mypc",img:"img/epoca/mypc.png",es:"Mi PC",en:"My PC",win:"mypc"},
+ {id:"mypc",img:null,modo:"mypc",es:"Mi PC",en:"My PC",win:"mypc"},
  {id:"inversores",img:"img/epoca/notepad.png",es:"Inversores.txt",en:"Investors.txt",win:"inversores"},
  {id:"huella",img:"img/huella.png",es:"HUELLA GO",en:"HUELLA GO",win:"huella"},
  {id:"aliseo",img:"img/aliseo.jpg",es:"Aliseo.studio",en:"Aliseo.studio",win:"aliseo"},
  {id:"allincru",img:"img/allincru.png",es:"ALLINCRU · LEYENDAS",en:"ALLINCRU · LEGENDS",win:"allincru"},
  {id:"msn",img:"img/msn.jpg",es:"Contacto MSN",en:"MSN Contact",win:"msn"},
- {id:"juegos",img:null,svg:"juegos",es:"Juegos",en:"Games",win:"juegos"},{id:"paint",img:"img/epoca/paint.png",es:"Paint",en:"Paint",win:"paint"},
+ {id:"juegos",img:null,svg:"juegos",modo:"juegos",es:"Juegos",en:"Games",win:"juegos"},{id:"paint",img:"img/epoca/paint.png",es:"Paint",en:"Paint",win:"paint"},
  {id:"radio",img:"img/epoca/wmp.png",es:"Radio de la casa",en:"House Radio",win:"radio"},{id:"notas",img:null,svg:"notas",es:"Notas",en:"Notes",win:"notas"},{id:"desk",img:"img/probeta.jpg",es:"TIDElabs Desk",en:"TIDElabs Desk",win:"desk",badge:".exe"},
- {id:"papelera",img:"img/epoca/recycle.png",es:"Papelera",en:"Recycle Bin",win:"papelera"}
+ {id:"papelera",img:null,modo:"papelera",es:"Papelera",en:"Recycle Bin",win:"papelera"}
 ];
 let posIconos=JSON.parse(localStorage.getItem("tidelabs_iconos2")||"null");
 function pintarIconos(){
@@ -480,7 +518,7 @@ function pintarIconos(){
     const d=document.createElement("button"); d.className="icono"; d.dataset.id=ic.id;
     const def=posIconos&&posIconos[ic.id]?posIconos[ic.id]:{x:14+Math.floor(i/5)*116,y:12+(i%5)*118};
     d.style.left=def.x+"px"; d.style.top=def.y+"px";
-    d.innerHTML=(ic.img?`<img src="${ic.img}" alt="">`:ic.svg?pixSVG(ic.svg):`<span class="pix">${ic.pix}</span>`)+(ic.badge?`<span class="descarga">${ic.badge}</span>`:"")+`<span>${LANG==="es"?ic.es:ic.en}</span>`;
+    d.innerHTML=(ic.img?`<img src="${ic.img}" alt="">`:(ic.modo==="mypc"||ic.modo==="papelera")?`<img src="${srcModo(ic.modo)}" alt="">`:ic.modo==="juegos"?(TEMA==="95"?`<img src="img/epoca/win95/juegos.png" alt="">`:pixSVG("juegos")):ic.svg?pixSVG(ic.svg):`<span class="pix">${ic.pix}</span>`)+(ic.badge?`<span class="descarga">${ic.badge}</span>`:"")+`<span>${LANG==="es"?ic.es:ic.en}</span>`;
     d.addEventListener("click",e=>{ $$(".icono").forEach(x=>x.classList.remove("sel")); d.classList.add("sel"); e.stopPropagation() });
     d.addEventListener("dblclick",()=>abrirVentana(ic.win));
     let sx,sy,ox,oy,mov=false;
@@ -533,7 +571,7 @@ function pixSVG(clave){ return `<span class="pix svg">${SVG[clave]||""}</span>` 
 /* ---------- gestor de ventanas ---------- */
 const VENTANAS={}; let Z=100, FOCO=null;
 const DEFS={
- mypc:{icono:"img/epoca/mypc.png",pix:"🧪",ancho:560,es:"Mi PC — la casa",en:"My PC — the house"},
+ mypc:{clave:"mypc",pix:"🧪",ancho:560,es:"Mi PC — la casa",en:"My PC — the house"},
  inversores:{icono:"img/epoca/notepad.png",pix:"📈",ancho:520,es:"Inversores.txt — Bloc de notas",en:"Investors.txt — Notepad"},
  huella:{icono:"img/huella.png",ancho:480,es:"HUELLA GO",en:"HUELLA GO"},
  aliseo:{icono:"img/aliseo.jpg",ancho:480,es:"Aliseo.studio",en:"Aliseo.studio"},
@@ -544,7 +582,7 @@ const DEFS={
  solitario:{icono:null,svg:"cartas",pix:"🂡",ancho:620,es:"Solitario",en:"Solitaire"},
  paint:{icono:"img/epoca/paint.png",ancho:680,es:"Paint",en:"Paint"},
  desk:{icono:"img/probeta.jpg",ancho:500,es:"TIDElabs Desk (.exe)",en:"TIDElabs Desk (.exe)"},
- papelera:{icono:"img/epoca/recycle.png",pix:"🗑️",ancho:420,es:"Papelera de reciclaje",en:"Recycle Bin"},
+ papelera:{clave:"papelera",pix:"🗑️",ancho:420,es:"Papelera de reciclaje",en:"Recycle Bin"},
  deck:{icono:null,svg:"deck",ancho:880,es:"Deck de inversores",en:"Investor Deck"},
  radio:{icono:"img/epoca/wmp.png",ancho:440,es:"Radio de la casa",en:"House Radio"},
  notas:{icono:null,svg:"notas",ancho:450,es:"Notas — se guardan de verdad",en:"Notes — actually saved"},
@@ -565,7 +603,7 @@ function abrirVentana(id){
   el.style.left=Math.min(60+n*32,innerWidth-def.ancho-16)+"px";
   el.style.top=Math.min(26+n*28,innerHeight-240)+"px";
   el.style.zIndex=++Z;
-  el.innerHTML=`<header class="titlebar">${def.icono?`<img class="ticon" src="${def.icono}" alt="">`:def.svg?`<span class="ticon-svg">${SVG[def.svg]}</span>`:`<span class="ticon-txt">${def.pix}</span>`}<span class="tt">${tituloDe(id)}</span>
+  el.innerHTML=`<header class="titlebar">${def.clave?`<img class="ticon" src="${srcModo(def.clave)}" alt="">`:def.icono?`<img class="ticon" src="${def.icono}" alt="">`:def.svg?`<span class="ticon-svg">${SVG[def.svg]}</span>`:`<span class="ticon-txt">${def.pix}</span>`}<span class="tt">${tituloDe(id)}</span>
     <span class="wbtns"><button class="wbtn" data-a="min" aria-label="Minimizar">_</button><button class="wbtn" data-a="max" aria-label="Maximizar">▢</button><button class="wbtn cerrar" data-a="x" aria-label="Cerrar">✕</button></span></header>
     <div class="cuerpo"></div><footer class="statusbar"></footer>`;
   $("#desktop").appendChild(el);
@@ -589,7 +627,7 @@ function abrirVentana(id){
     const up=()=>{ tb.removeEventListener("pointermove",mv); tb.removeEventListener("pointerup",up) };
     tb.addEventListener("pointermove",mv); tb.addEventListener("pointerup",up); });
   const btn=document.createElement("button"); btn.className="tarea"; btn.dataset.id=id;
-  btn.innerHTML=(def.icono?`<img src="${def.icono}" alt="">`:"")+`<span>${tituloDe(id)}</span>`;
+  btn.innerHTML=(def.clave?`<img src="${srcModo(def.clave)}" alt="">`:def.icono?`<img src="${def.icono}" alt="">`:"")+`<span>${tituloDe(id)}</span>`;
   btn.addEventListener("click",()=>{ if(el.style.display==="none"){ el.style.display="flex"; el.style.zIndex=++Z; enfocar(id) } else if(FOCO===id){ el.style.display="none" } else { el.style.zIndex=++Z; enfocar(id) } });
   $("#tareas").appendChild(btn);
   enfocar(id); SFX.abrir();
@@ -600,6 +638,8 @@ function abrirVentana(id){
   if(id==="desk")deskInit();
   if(id==="radio")radioInit();
   if(id==="notas")notasInit();
+  if(id==="props")propsInit();
+  if(id==="prop")propInit();
   if(innerWidth<760)el.classList.add("max");
 }
 function cerrarVentana(id){ const v=VENTANAS[id]; if(!v)return; v.el.remove(); delete VENTANAS[id];
@@ -618,12 +658,12 @@ function pintarMenus(){
     ["juegos",null,"svg:juegos",t("Juegos","Games"),t("Buscaminas y Solitario","Minesweeper & Solitaire")],["paint","img/epoca/paint.png",null,"Paint",t("El de siempre, con spray","The classic, with spray")]];
   $("#menu-proyectos").innerHTML=proy.map(p=>`<button class="mi" data-win="${p[0]}">${p[1]?`<img src="${p[1]}" alt="">`:p[2]&&p[2].startsWith("svg:")?pixSVG(p[2].slice(4)):`<span class="pix">${p[2]}</span>`}<span>${p[3]}<small>${p[4]}</small></span></button>`).join("");
   const xp=TEMA==="xp";
-  const sis=[["mypc","img:img/epoca/mypc.png",t("Mi PC","My PC")],["inversores","img:img/epoca/notepad.png","Inversores.txt"],
+  const sis=[["mypc","modo:mypc",t("Mi PC","My PC")],["inversores","img:img/epoca/notepad.png","Inversores.txt"],
     ["tema","svg:tema",xp?t("Reiniciar como Windows 95","Restart as Windows 95"):t("Reiniciar como Windows XP","Restart as Windows XP")],
     ["idioma","svg:idioma",LANG==="es"?"English":"Español"],
     ["sonido",SONIDO?"svg:sonon":"svg:sonoff",SONIDO?t("Silenciar sonidos","Mute sounds"):t("Activar sonidos","Unmute sounds")],
-    ["tareas","svg:tareas",t("Administrador de tareas","Task Manager")],["papelera","img:img/epoca/recycle.png",t("Papelera","Recycle Bin")]];
-  $("#menu-sistema").innerHTML=sis.map(s=>`<button class="mi" data-sis="${s[0]}">${s[1].startsWith("svg:")?pixSVG(s[1].slice(4)):s[1].startsWith("img:")?`<img src="${s[1].slice(4)}" alt="">`:`<span class="pix">${s[1]}</span>`}<span>${s[2]}</span></button>`).join("");
+    ["tareas","svg:tareas",t("Administrador de tareas","Task Manager")],["papelera","modo:papelera",t("Papelera","Recycle Bin")]];
+  $("#menu-sistema").innerHTML=sis.map(s=>`<button class="mi" data-sis="${s[0]}">${s[1].startsWith("svg:")?pixSVG(s[1].slice(4)):s[1].startsWith("modo:")?`<img src="${srcModo(s[1].slice(5))}" alt="">`:s[1].startsWith("img:")?`<img src="${s[1].slice(4)}" alt="">`:`<span class="pix">${s[1]}</span>`}<span>${s[2]}</span></button>`).join("");
   $$("#menu-inicio .mi").forEach(b=>b.addEventListener("click",()=>{
     cerrarMenu();
     if(b.dataset.win)abrirVentana(b.dataset.win);
@@ -651,8 +691,8 @@ function abrirCtx(x,y,items){
 function cerrarCtx(){ CTX.classList.remove("abierto") }
 document.addEventListener("click",e=>{ if(!e.target.closest("#ctx"))cerrarCtx() });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ cerrarCtx(); cerrarMenu() } });
-function menuEscritorio(x,y){ abrirCtx(x,y,[["organizar",t("Organizar iconos","Auto arrange icons")],["tema",TEMA==="xp"?t("Reiniciar como Windows 95","Restart as Windows 95"):t("Reiniciar como Windows XP","Restart as Windows XP")],"hr",["juegos",t("Abrir Juegos","Open Games")],["sonido",SONIDO?t("Silenciar","Mute"):t("Activar sonido","Unmute")]]) }
-function menuIcono(x,y,ic){ abrirCtx(x,y,[["abrir-"+ic.win,t("Abrir","Open")],"hr",["organizar",t("Organizar iconos","Auto arrange icons")]]) }
+function menuEscritorio(x,y){ abrirCtx(x,y,[["organizar",t("Organizar iconos","Auto arrange icons")],["tema",TEMA==="xp"?t("Reiniciar como Windows 95","Restart as Windows 95"):t("Reiniciar como Windows XP","Restart as Windows XP")],"hr",["juegos",t("Abrir Juegos","Open Games")],["sonido",SONIDO?t("Silenciar","Mute"):t("Activar sonido","Unmute")],"hr",["props",t("Propiedades","Properties")]]) }
+function menuIcono(x,y,ic){ abrirCtx(x,y,[["abrir-"+ic.win,t("Abrir","Open")],"hr",["organizar",t("Organizar iconos","Auto arrange icons")],["prop-"+ic.id,t("Propiedades","Properties")]]) }
 function menuTitulo(x,y,id){ abrirCtx(x,y,[["min-"+id,t("Minimizar","Minimise")],["max-"+id,t("Maximizar / Restaurar","Maximise / Restore")],"hr",["x-"+id,t("Cerrar","Close")]]) }
 const ACCIONES={
   organizar(){ posIconos=null; localStorage.removeItem("tidelabs_iconos2"); pintarIconos() },
@@ -750,7 +790,7 @@ paint(){ return `<div class="paint-wrap">
   <span class="paint-acciones"><button class="boton-xp" id="paint-deshacer">${t("Deshacer","Undo")}</button><button class="boton-xp" id="paint-nuevo">${t("Nuevo","New")}</button><button class="boton-xp" id="paint-guardar">${t("Guardar PNG","Save PNG")}</button></span>
 </div>
 <p style="font-size:12px;color:#555;margin-top:7px">${t("El Paint de siempre: dibuja, haz spray sobre la probeta y guarda tu obra como PNG.","Classic Paint: draw, spray over everything, and save your work as a PNG.")}</p>` },
-papelera(){ return `<h3>${t("Papelera de reciclaje","Recycle Bin")}</h3>
+papelera(){ return `<img src="${srcModo('llena')}" alt="" style="width:76px;height:76px;float:right;margin:0 0 6px 12px"><h3>${t("Papelera de reciclaje","Recycle Bin")}</h3>
 <p>${t("3 elementos:","3 items:")}</p><p>🗂️ ${t("ideas-a-las-3am.zip (eran buenas, pero a las 3 am)","3am-ideas.zip (they were good, but at 3 am)")}<br>📄 ${t("logo-definitivo-FINAL-v7-ahora-si.png","logo-final-FINAL-v7-really.png")}<br>🧦 ${t("un calcetín (el otro sigue en paradero desconocido)","one sock (its pair is still missing)")}</p>` },
 deck(){ return `<iframe class="deck-frame" src="deck/index.html" title="Deck de inversores de TIDElabs"></iframe>
 <p style="margin-top:8px;font-size:12.5px;color:#555">${t("El deck vive dentro del escritorio. Para enviarlo suelto:","The deck lives inside the desktop. To send it on its own:")} <span class="enlace" onclick="window.open('https://tidelabstech.github.io/TIDElabs/deck/','_blank')">tidelabstech.github.io/TIDElabs/deck</span></p>` },
@@ -983,6 +1023,118 @@ function paintInit(){
   $("#paint-guardar").onclick=()=>{ const a=document.createElement("a"); a.download="mi-obra-tidelabs.png"; a.href=cv.toDataURL("image/png"); a.click(); SFX.ganar() };
 }
 
+
+/* ---------- FONDOS elegibles ---------- */
+const FONDOS={
+  bliss:{es:"Bliss atlántico",en:"Atlantic Bliss",bg:'url("fondo-bliss-web.jpg") center/cover no-repeat'},
+  atardecer:{es:"Atardecer canario",en:"Canarian sunset",bg:'url("fondo-atardecer-web.jpg") center/cover no-repeat'},
+  medianoche:{es:"Medianoche de la casa",en:"House midnight",bg:"radial-gradient(1000px 620px at 50% 18%,#12305C,#010612)"},
+  mareas:{es:"Mareas",en:"Tides",bg:"linear-gradient(160deg,#0B3B4D,#0A6E6E 55%,#0D1F1C)"},
+  teal:{es:"Verde azulado del 95",en:"95 teal",bg:"#008080"}
+};
+let FONDO=localStorage.getItem("tidelabs_fondo")||"";
+let FONDO_MANUAL=localStorage.getItem("tidelabs_fondo_manual")==="1";
+function aplicarFondo(id,manual){ if(!FONDOS[id])id="bliss"; FONDO=id; if(manual){ FONDO_MANUAL=true; localStorage.setItem("tidelabs_fondo_manual","1") } localStorage.setItem("tidelabs_fondo",id); const d=$("#desktop"); if(d)d.style.background=FONDOS[id].bg }
+function fondoDeTema(){ if(!FONDO_MANUAL) aplicarFondo(TEMA==="95"?"teal":"bliss",false) }
+function fondoInit(){ if(FONDO&&FONDOS[FONDO])aplicarFondo(FONDO,false); else fondoDeTema() }
+
+/* ---------- ESQUEMAS DE CURSOR elegibles ---------- */
+let CURSOR=localStorage.getItem("tidelabs_cursor")||"auto";
+function aplicarCursor(){ document.body.classList.remove("cur-xp","cur-95","cur-trans","cur-sistema"); if(CURSOR!=="auto")document.body.classList.add("cur-"+CURSOR); localStorage.setItem("tidelabs_cursor",CURSOR) }
+
+/* ---------- PROTECTOR DE PANTALLA de época ---------- */
+let SALVA_TIPO=localStorage.getItem("tidelabs_salva")||"estrellas";
+let SALVA_MIN=+(localStorage.getItem("tidelabs_salva_min")||"3");
+let salvaTimer=null, salvaRAF=null, salvaOn=false;
+function salvaInit(){
+  ["pointerdown","keydown"].forEach(ev=>document.addEventListener(ev,()=>{ if(salvaOn)salvaStop(); salvaRearmar() },true));
+  let ultimo=0;
+  document.addEventListener("pointermove",()=>{ const a=Date.now(); if(a-ultimo>2500){ ultimo=a; if(!salvaOn)salvaRearmar() } },true);
+  salvaRearmar();
+}
+function salvaRearmar(){ clearTimeout(salvaTimer); if(SALVA_MIN>0&&SALVA_TIPO!=="ninguno")salvaTimer=setTimeout(salvaStart,SALVA_MIN*60000) }
+function salvaStart(){
+  if(salvaOn)return;
+  const d=$("#desktop"); if(!d||getComputedStyle(d).display==="none"){ salvaTimer=setTimeout(salvaStart,30000); return }
+  const capa=$("#salva"); capa.classList.add("activo"); salvaOn=true;
+  const cv=$("#salva-canvas"), pb=$("#salva-probeta");
+  if(SALVA_TIPO==="probeta"){ cv.style.display="none"; pb.hidden=false;
+    let x=innerWidth*0.3,y=innerHeight*0.25,vx=2.4,vy=2.0;
+    const paso=()=>{ if(!salvaOn)return; x+=vx; y+=vy; if(x<0||x>innerWidth-116)vx*=-1; if(y<0||y>innerHeight-116)vy*=-1; pb.style.left=x+"px"; pb.style.top=y+"px"; salvaRAF=requestAnimationFrame(paso) };
+    paso();
+  } else { pb.hidden=true; cv.style.display="block"; cv.width=innerWidth; cv.height=innerHeight;
+    const cx=cv.getContext("2d"); const estrellas=Array.from({length:170},()=>({x:Math.random()*2-1,y:Math.random()*2-1,z:Math.random()*0.9+0.1}));
+    const paso=()=>{ if(!salvaOn)return; cx.fillStyle="#000"; cx.fillRect(0,0,cv.width,cv.height); cx.fillStyle="#FFF";
+      estrellas.forEach(st=>{ st.z-=0.008; if(st.z<=0.05){ st.x=Math.random()*2-1; st.y=Math.random()*2-1; st.z=1 }
+        const px=cv.width/2+st.x/st.z*cv.width*0.42, py=cv.height/2+st.y/st.z*cv.height*0.42, r=Math.max(1,(1-st.z)*3.2);
+        cx.fillRect(px,py,r,r) });
+      salvaRAF=requestAnimationFrame(paso) };
+    paso();
+  }
+}
+function salvaStop(){ salvaOn=false; $("#salva").classList.remove("activo"); if(salvaRAF)cancelAnimationFrame(salvaRAF); salvaRearmar() }
+function salvaPreview(){ const d=$("#desktop"); if(d)salvaStart() }
+
+/* ---------- PROPIEDADES (pantalla) y de cada icono ---------- */
+let propsTab="fondo";
+const PROPS_ICONO={
+  mypc:["Sistema","La casa por dentro: proyectos, cifras con su etiqueta y accesos directos."],
+  inversores:["Documento","Inversores.txt: el resumen que un inversor puede leer sin salir del escritorio."],
+  huella:["Proyecto de la casa","El juego de caminar Canarias. En desarrollo, probado en calle con rutas reales."],
+  aliseo:["Proyecto · En vivo","Canciones personalizadas desde 25 €, con productores reales. Ya vende."],
+  allincru:["Proyecto · En el taller","Laboratorio público de trading algorítmico: ni un número inventado."],
+  msn:["Contacto","El colega verde: conversa y escribe al correo de la casa, de verdad."],
+  juegos:["Juegos de época","Buscaminas y Solitario como los de entonces, con sus sonidos."],
+  paint:["Juego de época","El Paint de siempre: pincel, spray, figuras… y guardar como PNG."],
+  papelera:["Sistema","3 elementos dentro. La papelera se abre llena, como debe ser."],
+  radio:["Utilidad de la casa","Suena el himno real de Aliseo y los estribillos de sus voces."],
+  notas:["Utilidad","El bloc que SÍ se guarda: vive en este equipo, en tu navegador."],
+  deck:["Inversores","La presentación de la casa en 10 diapositivas, dentro del escritorio."],
+  desk:["Sistema","Este mismo escritorio, instalable como app (PWA) y usable sin conexión."]
+};
+let propId=null, propWin=null;
+function abrirPropIcono(ic){ propId=ic.id; propWin=ic.win; abrirVentana("prop") }
+function propInit(){ const ic=ICONOS.find(i=>i.id===propId); const tt=$("#win-prop .tt"); if(tt&&ic)tt.textContent=(LANG==="es"?ic.es:ic.en)+" — "+t("Propiedades","Properties") }
+DEFS.props={icono:null,svg:"tema",ancho:545,es:"Propiedades de pantalla",en:"Display Properties"};
+DEFS.prop={icono:null,svg:"mypc",ancho:430,es:"Propiedades",en:"Properties"};
+CONTENIDOS.props=()=>{
+  const tabs=[["fondo",t("Fondo","Wallpaper")],["cursor","Cursor"],["pantalla",t("Protector","Screensaver")],["sistema",t("La casa","The House")]];
+  let cuerpo="";
+  if(propsTab==="fondo") cuerpo=`<div class="fondo-grid">${Object.entries(FONDOS).map(([k,f])=>`<button class="fondo-card ${FONDO===k?"on":""}" data-fondo="${k}"><span class="fondo-thumb" style="background:${f.bg}"></span>${LANG==="es"?f.es:f.en}</button>`).join("")}</div>
+  <p style="font-size:12px;color:#666;margin-top:10px">${t("Tu fondo se guarda en este equipo y sobrevive al reinicio entre XP y 95.","Your wallpaper is saved on this machine and survives the XP/95 reboot.")}</p>`;
+  else if(propsTab==="cursor") cuerpo=`<div class="cur-lista">${[["auto",t("Automático (el del modo)","Automatic (follows the mode)"),t("XP en XP, 95 en 95","XP on XP, 95 on 95")],["xp","Windows XP",t("El set auténtico de XP, dominio público","The authentic XP set, public domain")],["95","Windows 95",t("La flecha afilada y la mano clásica del 95","The sharp arrow and classic hand of 95")],["trans",t("Transparente 2007","2007 Transparent"),t("El set translúcido de rw-designer (CC-BY)","The translucent rw-designer set (CC-BY)")],["sistema",t("El de tu sistema","Your system's own"),t("Sin disfraz: el cursor de siempre","No disguise: your everyday cursor")]].map(o=>`<label><input type="radio" name="cur" value="${o[0]}" ${CURSOR===o[0]?"checked":""}><span><b>${o[1]}</b><small>${o[2]}</small></span></label>`).join("")}</div>`;
+  else if(propsTab==="pantalla") cuerpo=`<div class="cur-lista">
+    <label><span style="flex:1"><b>${t("Protector","Saver")}</b><small>${t("Como el de las estrellas de entonces","Like the flying stars of old")}</small></span>
+    <select id="salva-tipo"><option value="estrellas" ${SALVA_TIPO==="estrellas"?"selected":""}>${t("Estrellas voladoras","Flying stars")}</option><option value="probeta" ${SALVA_TIPO==="probeta"?"selected":""}>${t("La probeta rebotando","The bouncing flask")}</option><option value="ninguno" ${SALVA_TIPO==="ninguno"?"selected":""}>${t("Ninguno","None")}</option></select></label>
+    <label><span style="flex:1"><b>${t("Esperar","Wait")}</b><small>${t("Minutos sin tocar nada","Idle minutes")}</small></span>
+    <select id="salva-min">${[1,3,5,0].map(m=>`<option value="${m}" ${SALVA_MIN===m?"selected":""}>${m===0?t("Nunca","Never"):m+" min"}</option>`).join("")}</select></label>
+    <button class="boton-xp" id="salva-ver" style="align-self:flex-start">${t("Vista previa","Preview")}</button></div>`;
+  else cuerpo=`<table class="prop-tabla">
+    <tr><td>${t("Equipo","Machine")}</td><td>TIDElabs Desk — ${t("el escritorio de la casa","the house desktop")}</td></tr>
+    <tr><td>${t("Sistema","System")}</td><td>TIDE OS · XP ⇄ 95 ${t("con reinicio de verdad","with a real reboot")}</td></tr>
+    <tr><td>${t("Lema","Motto")}</td><td>«Si lo has soñado, podemos crearlo.»</td></tr>
+    <tr><td>${t("Créditos","Credits")}</td><td>${t("Iconos y cursores de época en dominio público (rw-designer); el set Transparente es CC-BY. Detalle en el README del repo.","Public-domain era icons & cursors (rw-designer); the Transparent set is CC-BY. Details in the repo README.")}</td></tr>
+    </table>
+    <p style="margin-top:12px"><button class="boton-xp" onclick="abrirVentana('deck')">📊 ${t("Abrir el deck","Open the deck")}</button> <button class="boton-xp" onclick="abrirVentana('radio')">📻 ${t("Escuchar la radio","Play the radio")}</button></p>`;
+  return `<div class="props-tabs">${tabs.map(x=>`<button class="props-tab ${propsTab===x[0]?"on":""}" data-tab="${x[0]}">${x[1]}</button>`).join("")}</div>${cuerpo}`;
+};
+CONTENIDOS.prop=()=>{ const p=PROPS_ICONO[propId]||["—",""]; const ic=ICONOS.find(i=>i.id===propId);
+  return `<table class="prop-tabla"><tr><td>${t("Nombre","Name")}</td><td>${ic?(LANG==="es"?ic.es:ic.en):propId}</td></tr>
+  <tr><td>${t("Tipo","Type")}</td><td>${p[0]}</td></tr><tr><td>${t("Qué es","What it is")}</td><td>${p[1]}</td></tr>
+  <tr><td>${t("Origen","Origin")}</td><td>${t("Hecho en la casa, en Canarias","Made in-house, in the Canaries")}</td></tr></table>
+  <p style="margin-top:12px"><button class="boton-xp" onclick="abrirVentana('${propWin}')" style="font-weight:700">${t("Abrir","Open")}</button></p>` };
+function propsInit(){
+  const w=$("#win-props"); if(!w)return;
+  w.querySelectorAll(".props-tab").forEach(b=>b.onclick=()=>{ propsTab=b.dataset.tab; w.querySelector(".cuerpo").innerHTML=CONTENIDOS.props(); propsInit(); SFX.clic() });
+  w.querySelectorAll(".fondo-card").forEach(b=>b.onclick=()=>{ aplicarFondo(b.dataset.fondo,true); w.querySelector(".cuerpo").innerHTML=CONTENIDOS.props(); propsInit(); SFX.carta() });
+  w.querySelectorAll('input[name="cur"]').forEach(r=>r.onchange=()=>{ CURSOR=r.value; aplicarCursor(); SFX.clic() });
+  const st=$("#salva-tipo"), sm=$("#salva-min"), sv=$("#salva-ver");
+  if(st)st.onchange=()=>{ SALVA_TIPO=st.value; localStorage.setItem("tidelabs_salva",SALVA_TIPO); salvaRearmar() };
+  if(sm)sm.onchange=()=>{ SALVA_MIN=+sm.value; localStorage.setItem("tidelabs_salva_min",String(SALVA_MIN)); salvaRearmar() };
+  if(sv)sv.onclick=()=>{ cerrarVentana("props"); setTimeout(salvaStart,350) };
+}
+ACCIONES.props=()=>abrirVentana("props");
+ICONOS.forEach(ic=>{ ACCIONES["abrir-"+ic.win]=()=>abrirVentana(ic.win); ACCIONES["prop-"+ic.id]=()=>abrirPropIcono(ic) });
 /* ---------- RADIO de la casa ---------- */
 function radioInit(){
   const au=$("#radio-audio"), btn=$("#radio-play"), prog=$("#radio-prog"), barra=prog?prog.querySelector("i"):null, tiempo=$("#radio-tiempo");
@@ -1029,5 +1181,6 @@ if("serviceWorker" in navigator && (location.protocol==="https:" || location.hos
 aplicarTema();
 if(matchMedia("(prefers-reduced-motion: reduce)").matches){ mostrar("#welcome") } else { encender() }
 </script>
+<div id="salva" aria-hidden="true"><canvas id="salva-canvas"></canvas><img id="salva-probeta" src="img/probeta.jpg" alt="" hidden></div>
 </body>
 </html>
