@@ -1388,7 +1388,7 @@ function p2Decide(w){
   if(w.estado==="encuentro"){ if(w.tropiezaLuego){ w.tropiezaLuego=false; w.estado="tropiezo"; w.tEstado=.75; return } if(w.saltaLuego){ w.saltaLuego=false; w.vy=-400; w.estado="cae"; return } }
   if(w.estado==="duerme"){ w.estado="paseo"; w.tEstado=4+Math.random()*4; return }
   if(w.cfg.iconos&&w.modoIconos>0){ w.estado="quieto"; w.tEstado=.6; return }
-  if(w.cfg.iconos&&w.modoIconos<=0&&Math.abs(w.pies-(innerHeight-34))<3&&Math.random()<.3){ w.modoIconos=15; w.estado="quieto"; w.tEstado=.4; if(Math.random()<.5)p2Decir(w,LANG==="es"?"¡a saltar por los iconos!":"icon hopping time!"); return }
+  if(w.cfg.iconos&&w.modoIconos<=0&&Math.abs(w.pies-(innerHeight-34))<3&&Math.random()<.3){ w.modoIconos=45; w.estado="quieto"; w.tEstado=.4; if(Math.random()<.5)p2Decir(w,LANG==="es"?"¡a saltar por los iconos!":"icon hopping time!"); return }
   const adulto=w.cfg.sigue?p2AdultoCerca(w):null;
   if(adulto&&Math.abs(adulto.x-w.x)>240){ w.estado="paseo"; w.dir=adulto.x>w.x?1:-1; w.tEstado=3.5; if(Math.random()<.35)p2Decir(w,LANG==="es"?"¡esperadmeeee!":"waaait for meee!"); return }
   const r=Math.random(), d=w.cfg.duermeP;
@@ -1446,7 +1446,7 @@ function p2Tick(ts){
     if(w.estado==="cae"){
       const antes=w.pies; w.vy+=1500*dt; w.pies+=w.vy*dt; if(w.vx)w.x+=w.vx*dt;
       const cruza=apoyos.filter(s=>w.x>s.x1&&w.x<s.x2&&s.y>=antes-1&&s.y<=w.pies);
-      if(cruza.length&&w.vy>0){ const s=cruza.reduce((a,b)=>a.y<b.y?a:b); w.pies=s.y; w.vy=0; w.vx=0; w.estado="quieto"; w.tEstado=s.win==="icono"?1.7+Math.random()*1.3:1.1+Math.random()*1.4; if(s.win==="icono"&&Math.random()<.4)p2Decir(w,LANG==="es"?"¡estoy en un icono! ¡ilumino desde aquí!":"I am on an icon! lighting up from up here!") }
+      if(cruza.length&&w.vy>0){ const s=cruza.reduce((a,b)=>a.y<b.y?a:b); w.pies=s.y; w.vy=0; w.vx=0; w.estado="quieto"; const enCentro=s.y>innerHeight*.28&&s.y<innerHeight*.72; w.tEstado=s.win==="icono"?(enCentro?2.8+Math.random()*1.5:1.7+Math.random()*1.3):1.1+Math.random()*1.4; if(s.win==="icono"&&Math.random()<(enCentro?.55:.4))p2Decir(w,LANG==="es"?"¡estoy en un icono! ¡ilumino desde aquí!":"I am on an icon! lighting up from up here!") }
       if(w.pies>innerHeight-34){ w.pies=innerHeight-34; w.vy=0; w.estado="quieto"; w.tEstado=1.4 }
       p2Frame(w,"cae");
     } else if(w.estado==="paseo"){
@@ -1460,8 +1460,27 @@ function p2Tick(ts){
       if(w.tEstado<=0)p2Decide(w);
     } else {
       p2Frame(w,w.estado==="pasta"?"pasta":w.estado==="duerme"?"duerme":"quieto");
-      if(w.cfg.iconos&&w.modoIconos>0&&apoyo&&w.tEstado<=0){ const ics=$$(".icono").map(ic=>{ const r=ic.getBoundingClientRect(); return {cx:r.left+r.width/2,top:r.top} }).filter(o=>o.top<w.pies-14||Math.abs(o.cx-w.x)>50);
-        if(ics.length){ ics.sort((a,b)=>Math.abs(a.cx-w.x)-Math.abs(b.cx-w.x)); const t=ics[0]; w.dir=t.cx>w.x?1:-1; const distY=Math.max(30,(w.pies-t.top)+44); const vy=-Math.sqrt(2*1500*distY); const tv=2*Math.abs(vy)/1500; w.vx=Math.max(-340,Math.min(340,(t.cx-w.x)/tv)); w.vy=vy; w.estado="cae" } }
+      if(w.cfg.iconos&&w.modoIconos>0&&apoyo&&w.tEstado<=0){
+        const ics=$$(".icono").map(ic=>{ const r=ic.getBoundingClientRect(); return {cx:r.left+r.width/2,top:r.top} }).filter(o=>o.top>=-4);
+        if(ics.length){
+          const filaDe=top=>Math.round(top/12)*12;
+          const filas=[...new Set(ics.map(o=>filaDe(o.top)))].sort((a,b)=>b-a); // de abajo a arriba
+          const enSuelo=Math.abs(w.pies-(innerHeight-34))<4;
+          const miFila=enSuelo?null:filaDe(w.pies);
+          const idx=miFila===null?-1:filas.indexOf(miFila);
+          let filaDest;
+          if(miFila===null) filaDest=filas[0];                        // arranca en la fila de abajo
+          else if(idx>=filas.length-1){ w.modoIconos=0; filaDest=null } // ya corono: fin de la gira
+          else if(miFila>innerHeight*.28&&miFila<innerHeight*.72&&Math.random()<.42) filaDest=miFila; // en el centro se recrea: salto lateral
+          else filaDest=filas[idx+1];                                  // un piso mas arriba
+          if(filaDest!==null&&filaDest!==undefined){
+            const cands=ics.filter(o=>filaDe(o.top)===filaDest&&Math.abs(o.cx-w.x)>26);
+            if(cands.length){ const pesos=cands.map(o=>(o.cx>innerWidth*.22&&o.cx<innerWidth*.78)?3:1);
+              let suma=pesos.reduce((a,b)=>a+b,0), dado=Math.random()*suma, t=cands[0];
+              for(let i=0;i<cands.length;i++){ dado-=pesos[i]; if(dado<=0){ t=cands[i]; break } }
+              w.dir=t.cx>w.x?1:-1; const distY=Math.max(30,(w.pies-t.top)+44); const vy=-Math.sqrt(2*1500*distY); const tv=2*Math.abs(vy)/1500; w.vx=Math.max(-340,Math.min(340,(t.cx-w.x)/tv)); w.vy=vy; w.estado="cae" }
+          }
+        } }
       if(w.id==="mini"){ const ad=p2AdultoCerca(w); if(!ad){ w.solo+=dt; if(w.solo>20&&w.estado!=="duerme"){ w.solo=8; p2Decir(w,LANG==="es"?"¡baaa! ¿dónde estáis?":"baaa! where are you?"); p2Bleat(w) } } else w.solo=0 }
       if(w.tEstado<=0&&w.estado!=="cae")p2Decide(w);
     }
